@@ -70,88 +70,14 @@ const Profile = () => {
   };
   return (
     <>
-      <div className="w-full fixed top-0 left-0 py-[5px] bg-[#000] hidden z-20 px-[20px] md:block border-b border-[#2b2b2b] smm:py-[10px]">
+      <div className="w-full fixed top-0 left-0 py-[5px] bg-[#FFF] dark:bg-[#000] hidden z-20 px-[20px] md:block border-b border-[#dfdede] dark:border-[#2b2b2b] smm:py-[10px]">
         <div className="flex items-center justify-between">
           <div className="w-[30%]">
-            <Link to={"/account"} className="text-[#FFF] text-[25px] py-[10px]">
-              <svg
-                aria-label="Параметры"
-                class="x1lliihq x1n2onr6"
-                color="rgb(245, 245, 245)"
-                fill="rgb(245, 245, 245)"
-                height="24"
-                role="img"
-                viewBox="0 0 24 24"
-                width="24"
-              >
-                <title>Параметры</title>
-                <circle
-                  cx="12"
-                  cy="12"
-                  fill="none"
-                  r="8.635"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                ></circle>
-                <path
-                  d="M14.232 3.656a1.269 1.269 0 0 1-.796-.66L12.93 2h-1.86l-.505.996a1.269 1.269 0 0 1-.796.66m-.001 16.688a1.269 1.269 0 0 1 .796.66l.505.996h1.862l.505-.996a1.269 1.269 0 0 1 .796-.66M3.656 9.768a1.269 1.269 0 0 1-.66.796L2 11.07v1.862l.996.505a1.269 1.269 0 0 1 .66.796m16.688-.001a1.269 1.269 0 0 1 .66-.796L22 12.93v-1.86l-.996-.505a1.269 1.269 0 0 1-.66-.796M7.678 4.522a1.269 1.269 0 0 1-1.03.096l-1.06-.348L4.27 5.587l.348 1.062a1.269 1.269 0 0 1-.096 1.03m11.8 11.799a1.269 1.269 0 0 1 1.03-.096l1.06.348 1.318-1.317-.348-1.062a1.269 1.269 0 0 1 .096-1.03m-14.956.001a1.269 1.269 0 0 1 .096 1.03l-.348 1.06 1.317 1.318 1.062-.348a1.269 1.269 0 0 1 1.03.096m11.799-11.8a1.269 1.269 0 0 1-.096-1.03l.348-1.06-1.317-1.318-1.062.348a1.269 1.269 0 0 1-1.03-.096"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                ></path>
-              </svg>
-            </Link>
-          </div>
-
-          <div className="flex items-center justify-center w-[30%]">
-            <h1 className="text-[#FFF] text-[15px] py-[10px] px-[5px] font-[600]">
-              idibek_02
-            </h1>
-          </div>
-          <div className="flex items-center justify-end w-[30%]">
-            <h1 className="text-[#FFF] text-[15px] px-[5px] font-[600] text-center flex items-center">
-              <svg
-                aria-label="Интересные люди"
-                class="x1lliihq x1n2onr6"
-                color="rgb(245, 245, 245)"
-                fill="rgb(245, 245, 245)"
-                height="24"
-                role="img"
-                viewBox="0 0 48 48"
-                width="24"
-              >
-                <title>Интересные люди</title>
-                <path d="M32 25.5c5.2 0 9.5-4.3 9.5-9.5S37.2 6.5 32 6.5s-9.5 4.3-9.5 9.5 4.3 9.5 9.5 9.5zm0-16c3.6 0 6.5 2.9 6.5 6.5s-2.9 6.5-6.5 6.5-6.5-2.9-6.5-6.5 2.9-6.5 6.5-6.5zm5.5 19h-11c-5.5 0-10 4.5-10 10V40c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-1.5c0-3.9 3.1-7 7-7h11c3.9 0 7 3.1 7 7V40c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-1.5c0-5.5-4.5-10-10-10zm-20-4.5c0-.8-.7-1.5-1.5-1.5h-5.5V17c0-.8-.7-1.5-1.5-1.5s-1.5.7-1.5 1.5v5.5H2c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5h5.5V31c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-5.5H16c.8 0 1.5-.7 1.5-1.5z"></path>
-              </svg>
-            </h1>
-          </div>
-        </div>
-      </div>
-      <div className="max-w-[1000px] mx-auto md:pt-[20px]">
-        <div className="flex items-center justify-center  md:justify-start sm1:justify-center md:gap-x-[20px] border-b border-[#5f5f5f] pt-[70px] pb-[30px] px-[10px] md:border-none">
-          <div className="w-[30%] flex items-center justify-center md:w-[20%]">
-            <img
-              src={person}
-              alt=""
-              className="w-[150px] sm1:min-w-[80px] rounded-[50%]"
-            />
-          </div>
-          <div className="w-[50%] md:w-[50%] sm1:w-[60%]">
-            <div className="flex items-center justify-start gap-x-[30px] sm:gap-y-[5px] sm:flex-wrap sm:gap-x-[20px]">
-              <h1 className="text-[#FFF] text-[25px] sm:text-[20px]">
-                idibek_02
-              </h1>
-              <Link
-                to={"/account/edit"}
-                className="w-auto px-[10px] py-[5px] sm1:order-3  rounded-[10px] bg-[#363636] text-[#F5F5F5] font-[600] text-center leading-[15px] md:px-[5px]"
-              >
-                Редактировать <br /> профиль
-              </Link>
-              <button onClick={handleClickOpen}>
-                <svg
+            <Link  className="text-[25px] py-[10px]">
+            <div className="">
+                    <div>
+                      <div className="hidden dark:block">
+                      <svg
                   aria-label="Параметры"
                   class="x1lliihq x1n2onr6"
                   color="rgb(245, 245, 245)"
@@ -180,9 +106,180 @@ const Profile = () => {
                     stroke-width="2"
                   ></path>
                 </svg>
+                      </div>
+                      <div className="dark:hidden">
+                      <svg
+                  aria-label="Параметры"
+                  class="x1lliihq x1n2onr6"
+                  color="#000"
+                  fill="#000"
+                  height="24"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="24"
+                >
+                  <title>Параметры</title>
+                  <circle
+                    cx="12"
+                    cy="12"
+                    fill="none"
+                    r="8.635"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></circle>
+                  <path
+                    d="M14.232 3.656a1.269 1.269 0 0 1-.796-.66L12.93 2h-1.86l-.505.996a1.269 1.269 0 0 1-.796.66m-.001 16.688a1.269 1.269 0 0 1 .796.66l.505.996h1.862l.505-.996a1.269 1.269 0 0 1 .796-.66M3.656 9.768a1.269 1.269 0 0 1-.66.796L2 11.07v1.862l.996.505a1.269 1.269 0 0 1 .66.796m16.688-.001a1.269 1.269 0 0 1 .66-.796L22 12.93v-1.86l-.996-.505a1.269 1.269 0 0 1-.66-.796M7.678 4.522a1.269 1.269 0 0 1-1.03.096l-1.06-.348L4.27 5.587l.348 1.062a1.269 1.269 0 0 1-.096 1.03m11.8 11.799a1.269 1.269 0 0 1 1.03-.096l1.06.348 1.318-1.317-.348-1.062a1.269 1.269 0 0 1 .096-1.03m-14.956.001a1.269 1.269 0 0 1 .096 1.03l-.348 1.06 1.317 1.318 1.062-.348a1.269 1.269 0 0 1 1.03.096m11.799-11.8a1.269 1.269 0 0 1-.096-1.03l.348-1.06-1.317-1.318-1.062.348a1.269 1.269 0 0 1-1.03-.096"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+                      </div>
+                    </div>
+                    </div>
+            </Link>
+          </div>
+
+          <div className="flex items-center justify-center w-[30%]">
+            <h1 className="text-[#000] dark:text-[#FFF] text-[15px] py-[10px] px-[5px] font-[600]">
+              idibek_02
+            </h1>
+          </div>
+          <div className="flex items-center justify-end w-[30%]">
+            <h1 className="text-[#000] dark:text-[#FFF] text-[15px] px-[5px] font-[600] text-center flex items-center">
+            <div className="">
+                    <div>
+                      <div className="hidden dark:block">
+                      <svg
+                aria-label="Интересные люди"
+                class="x1lliihq x1n2onr6"
+                color="rgb(245, 245, 245)"
+                fill="rgb(245, 245, 245)"
+                height="24"
+                role="img"
+                viewBox="0 0 48 48"
+                width="24"
+              >
+                <title>Интересные люди</title>
+                <path d="M32 25.5c5.2 0 9.5-4.3 9.5-9.5S37.2 6.5 32 6.5s-9.5 4.3-9.5 9.5 4.3 9.5 9.5 9.5zm0-16c3.6 0 6.5 2.9 6.5 6.5s-2.9 6.5-6.5 6.5-6.5-2.9-6.5-6.5 2.9-6.5 6.5-6.5zm5.5 19h-11c-5.5 0-10 4.5-10 10V40c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-1.5c0-3.9 3.1-7 7-7h11c3.9 0 7 3.1 7 7V40c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-1.5c0-5.5-4.5-10-10-10zm-20-4.5c0-.8-.7-1.5-1.5-1.5h-5.5V17c0-.8-.7-1.5-1.5-1.5s-1.5.7-1.5 1.5v5.5H2c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5h5.5V31c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-5.5H16c.8 0 1.5-.7 1.5-1.5z"></path>
+              </svg>
+                      </div>
+                      <div className="dark:hidden">
+                      <svg
+                aria-label="Интересные люди"
+                class="x1lliihq x1n2onr6"
+                color="#000"
+                fill="#000"
+                height="24"
+                role="img"
+                viewBox="0 0 48 48"
+                width="24"
+              >
+                <title>Интересные люди</title>
+                <path d="M32 25.5c5.2 0 9.5-4.3 9.5-9.5S37.2 6.5 32 6.5s-9.5 4.3-9.5 9.5 4.3 9.5 9.5 9.5zm0-16c3.6 0 6.5 2.9 6.5 6.5s-2.9 6.5-6.5 6.5-6.5-2.9-6.5-6.5 2.9-6.5 6.5-6.5zm5.5 19h-11c-5.5 0-10 4.5-10 10V40c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-1.5c0-3.9 3.1-7 7-7h11c3.9 0 7 3.1 7 7V40c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-1.5c0-5.5-4.5-10-10-10zm-20-4.5c0-.8-.7-1.5-1.5-1.5h-5.5V17c0-.8-.7-1.5-1.5-1.5s-1.5.7-1.5 1.5v5.5H2c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5h5.5V31c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-5.5H16c.8 0 1.5-.7 1.5-1.5z"></path>
+              </svg>
+                      </div>
+                    </div>
+                    </div>
+             
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div className="max-w-[1000px] mx-auto md:pt-[20px]">
+        <div className="flex items-center justify-center  md:justify-start sm1:justify-center md:gap-x-[20px] border-b border-[#5f5f5f] pt-[70px] pb-[30px] px-[10px] md:border-none">
+          <div className="w-[30%] flex items-center justify-center md:w-[20%]">
+            <img
+              src={person}
+              alt=""
+              className="w-[150px] sm1:min-w-[80px] rounded-[50%]"
+            />
+          </div>
+          <div className="w-[50%] md:w-[50%] sm1:w-[60%]">
+            <div className="flex items-center justify-start gap-x-[30px] sm:gap-y-[5px] sm:flex-wrap sm:gap-x-[20px]">
+              <h1 className="text-[#000] dark:text-[#FFF] text-[25px] sm:text-[20px]">
+                idibek_02
+              </h1>
+              <Link
+                to={"/account/edit"}
+                className="w-auto px-[10px] py-[5px] sm1:order-3  rounded-[10px] bg-[#f0f0f0] dark:bg-[#363636] text-[#000] dark:text-[#F5F5F5] font-[600] text-center leading-[15px] md:px-[5px]"
+              >
+                Редактировать <br /> профиль
+              </Link>
+              <button onClick={handleClickOpen}>
+              <div className="flex items-center justify-center">
+                    <div>
+                      <div className="hidden dark:block">
+                      <svg
+                  aria-label="Параметры"
+                  class="x1lliihq x1n2onr6"
+                  color="rgb(245, 245, 245)"
+                  fill="rgb(245, 245, 245)"
+                  height="24"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="24"
+                >
+                  <title>Параметры</title>
+                  <circle
+                    cx="12"
+                    cy="12"
+                    fill="none"
+                    r="8.635"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></circle>
+                  <path
+                    d="M14.232 3.656a1.269 1.269 0 0 1-.796-.66L12.93 2h-1.86l-.505.996a1.269 1.269 0 0 1-.796.66m-.001 16.688a1.269 1.269 0 0 1 .796.66l.505.996h1.862l.505-.996a1.269 1.269 0 0 1 .796-.66M3.656 9.768a1.269 1.269 0 0 1-.66.796L2 11.07v1.862l.996.505a1.269 1.269 0 0 1 .66.796m16.688-.001a1.269 1.269 0 0 1 .66-.796L22 12.93v-1.86l-.996-.505a1.269 1.269 0 0 1-.66-.796M7.678 4.522a1.269 1.269 0 0 1-1.03.096l-1.06-.348L4.27 5.587l.348 1.062a1.269 1.269 0 0 1-.096 1.03m11.8 11.799a1.269 1.269 0 0 1 1.03-.096l1.06.348 1.318-1.317-.348-1.062a1.269 1.269 0 0 1 .096-1.03m-14.956.001a1.269 1.269 0 0 1 .096 1.03l-.348 1.06 1.317 1.318 1.062-.348a1.269 1.269 0 0 1 1.03.096m11.799-11.8a1.269 1.269 0 0 1-.096-1.03l.348-1.06-1.317-1.318-1.062.348a1.269 1.269 0 0 1-1.03-.096"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+                      </div>
+                      <div className="dark:hidden">
+                      <svg
+                  aria-label="Параметры"
+                  class="x1lliihq x1n2onr6"
+                  color="#000"
+                  fill="#000"
+                  height="24"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="24"
+                >
+                  <title>Параметры</title>
+                  <circle
+                    cx="12"
+                    cy="12"
+                    fill="none"
+                    r="8.635"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></circle>
+                  <path
+                    d="M14.232 3.656a1.269 1.269 0 0 1-.796-.66L12.93 2h-1.86l-.505.996a1.269 1.269 0 0 1-.796.66m-.001 16.688a1.269 1.269 0 0 1 .796.66l.505.996h1.862l.505-.996a1.269 1.269 0 0 1 .796-.66M3.656 9.768a1.269 1.269 0 0 1-.66.796L2 11.07v1.862l.996.505a1.269 1.269 0 0 1 .66.796m16.688-.001a1.269 1.269 0 0 1 .66-.796L22 12.93v-1.86l-.996-.505a1.269 1.269 0 0 1-.66-.796M7.678 4.522a1.269 1.269 0 0 1-1.03.096l-1.06-.348L4.27 5.587l.348 1.062a1.269 1.269 0 0 1-.096 1.03m11.8 11.799a1.269 1.269 0 0 1 1.03-.096l1.06.348 1.318-1.317-.348-1.062a1.269 1.269 0 0 1 .096-1.03m-14.956.001a1.269 1.269 0 0 1 .096 1.03l-.348 1.06 1.317 1.318 1.062-.348a1.269 1.269 0 0 1 1.03.096m11.799-11.8a1.269 1.269 0 0 1-.096-1.03l.348-1.06-1.317-1.318-1.062.348a1.269 1.269 0 0 1-1.03-.096"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+                      </div>
+                    </div>
+                    </div>
+                
               </button>
             </div>
-            <div className="flex items-center justify-start gap-x-[30px] text-[#FFF] py-[15px] md:hidden">
+            <div className="flex items-center justify-start gap-x-[30px] text-[#000] dark:text-[#FFF] py-[15px] md:hidden">
               <h1 className="text-center">
                 <span className="font-[600]"> 20 </span> публикаций
               </h1>
@@ -194,8 +291,8 @@ const Profile = () => {
               </h1>
             </div>
             <div className="py-[10px]  md:hidden">
-              <h1 className="text-[#FFF] font-[500]">idibek_02</h1>
-              <p className="text-[#FFF] text-[12px]">
+              <h1 className="text-[#000] dark:text-[#FFF] font-[500]">idibek_02</h1>
+              <p className="text-[#000] dark:text-[#FFF] text-[12px] font-[500]">
                 Frontend developer <br />
                 Лучшие вещи в жизни — бесплатны: объятия, улыбки, друзья,
                 поцелуи, семья, сон, любовь, смех и хорошее настроение.
@@ -204,8 +301,8 @@ const Profile = () => {
           </div>
         </div>
         <div className="py-[10px] px-[15px] hidden md:block">
-          <h1 className="text-[#FFF] font-[500]">idibek_02</h1>
-          <p className="text-[#FFF] text-[12px]">
+          <h1 className="text-[#000] dark:text-[#FFF] font-[500]">idibek_02</h1>
+          <p className="text-[#000] dark:text-[#FFF] text-[12px] font-[500]">
             Frontend developer <br />
             Лучшие вещи в жизни — бесплатны: объятия, улыбки, друзья, поцелуи,
             семья, сон, любовь, смех и хорошее настроение.
@@ -213,7 +310,7 @@ const Profile = () => {
         </div>
         <div className="">
           <div>
-            <div className="items-center justify-evenly px-[20px] gap-x-[30px] text-[#FFF] py-[15px] hidden md:flex border-t border-[#5f5f5f]">
+            <div className="items-center justify-evenly px-[20px] gap-x-[30px] text-[#000] dark:text-[#FFF] py-[15px] hidden md:flex border-t border-[#5f5f5f]">
               <h1 className="text-center flex flex-col sm:text-[13px]">
                 <span className="font-[600]"> 20 </span> публикаций
               </h1>
@@ -226,7 +323,77 @@ const Profile = () => {
             </div>
           </div>
           <div className="flex items-center justify-center">
-            <Link className="inline-flex items-center justify-center gap-x-[10px] py-[10px] border-t">
+            <Link className="inline-flex items-center justify-center gap-x-[10px] py-[10px] border-t border-t-[#000] dark:border-t-[#FFF]">
+            <div className="dark:hidden">
+            <svg
+                aria-label=""
+                class="_ab6-"
+                color="#000"
+                fill="#000"
+                height="12"
+                className="md:h-[25px] md:w-[25px]"
+                role="img"
+                viewBox="0 0 24 24"
+                width="12"
+              >
+                <rect
+                  fill="none"
+                  height="18"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  width="18"
+                  x="3"
+                  y="3"
+                ></rect>
+                <line
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  x1="9.015"
+                  x2="9.015"
+                  y1="3"
+                  y2="21"
+                ></line>
+                <line
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  x1="14.985"
+                  x2="14.985"
+                  y1="3"
+                  y2="21"
+                ></line>
+                <line
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  x1="21"
+                  x2="3"
+                  y1="9.015"
+                  y2="9.015"
+                ></line>
+                <line
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  x1="21"
+                  x2="3"
+                  y1="14.985"
+                  y2="14.985"
+                ></line>
+              </svg>
+              </div>
+              <div className="hidden dark:block">
               <svg
                 aria-label=""
                 class="_ab6-"
@@ -294,7 +461,9 @@ const Profile = () => {
                   y2="14.985"
                 ></line>
               </svg>
-              <h1 className="text-[#FFF] text-center uppercase text-[12px] font-[500] md:hidden">
+              </div>
+              
+              <h1 className="text-[#000] dark:text-[#FFF] text-center uppercase text-[12px] font-[500] md:hidden">
                 Публикации
               </h1>
             </Link>
@@ -333,43 +502,43 @@ const Profile = () => {
             <ul className="flex flex-col">
               <Link
                 to={"/account/password/change"}
-                className="py-[14px] border-b border-[#414141] text-center text-[#FFF] text-[13px]"
+                className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]"
               >
                 Сменить пароль
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Профессиональный аккаунт
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 QR-код
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Приложения и сайты
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Уведомления
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Конфиденциальность и безопасность
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Контроль
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Входы в аккаунт
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Электронные письма от Instagram
               </Link>
               <Link
                 to={"/login"}
-                className="py-[14px] border-b border-[#414141] text-center text-[#FFF] text-[13px]"
+                className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]"
               >
                 Выйти
               </Link>
               <button
                 onClick={handleClose}
-                className="py-[12px] border-b border-[#414141] text-center text-[#FFF] text-[13px]"
+                className="py-[12px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]"
               >
                 Отмена
               </button>
