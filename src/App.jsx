@@ -1,7 +1,7 @@
 import "./App.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./Layout/Layout";
-import { Home ,Profile ,Login,Edit, ChangePassword } from "./Routes/Routes";
+import { Home ,Profile ,Login,Edit, ChangePassword, SignUp } from "./Routes/Routes";
 import { Suspense } from "react";
 import LoaderPage from "./components/LoaderPage/LoaderPage";
 
@@ -44,7 +44,19 @@ function App() {
     },
     {
       path:"/login",
-      element: <Login />
+      element: (
+        <Suspense fallback={<LoaderPage/>}>
+                <Login />
+              </Suspense>
+      )
+    },
+    {
+      path:"/accounts/emailsignup",
+      element: (
+        <Suspense fallback={<LoaderPage/>}>
+                <SignUp />
+              </Suspense>
+      )
     }
   ]);
 

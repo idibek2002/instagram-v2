@@ -1,15 +1,18 @@
-/* .person {
-  border-image: linear-gradient(
-    120deg,
-    rgba(36, 23, 0, 1) 0%,
-    rgba(44, 36, 1, 1) 0%,
-    rgba(89, 32, 6, 1) 21%,
-    rgba(121, 112, 9, 1) 45%,
-    rgba(157, 122, 66, 1) 71%,
-    rgba(255, 81, 0, 1) 100%
-  ) 1;
-} */
-
+.person {
+  /* border-image: radial-gradient(
+    circle at 30% 107%,
+    #fdf497 0%,
+    #fdf497 5%,
+    #fd5949 45%,
+    #d6249f 60%,
+    #285aeb 90%
+  )1; */
+}
+.image{
+  max-width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+}
 .stories::-webkit-scrollbar{
     display: none;
 }

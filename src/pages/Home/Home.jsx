@@ -247,9 +247,9 @@ const Home = () => {
                       >
                         {/* <img src={person} alt="" className="w-full" /> */}
                         {mutedd ? (
-                          <video src={videoFrilancer} autoPlay muted></video>
+                          <video className="image" src={videoFrilancer} autoPlay muted></video>
                         ) : (
-                          <video src={videoFrilancer} autoPlay></video>
+                          <video className="image" src={videoFrilancer} controls autoPlay></video>
                         )}
                       </div>
                     </SwiperSlide>
@@ -537,7 +537,7 @@ const Home = () => {
                 <div className="py-[5px] sm1:px-[10px]">
                   <input
                     placeholder="Добавьте комментариий..."
-                    className="pb-[15px] w-full text-[14px] outline-none bg-transparent text-[#000] dark:text-[#F5F5F5] placeholder:text-[#7F7F7F] placeholder:text-[14px] border-b border-[#262626]"
+                    className="pb-[15px] w-full text-[14px] outline-none bg-transparent text-[#000] dark:text-[#F5F5F5] placeholder:text-[#7F7F7F] placeholder:text-[14px] border-b dark:border-[#262626] border-[#d2d2d2]"
                   ></input>
                 </div>
               </div>
@@ -623,7 +623,7 @@ const Home = () => {
                         <img
                           src="https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
                           alt=""
-                          className="w-full"
+                          className="w-full image"
                         />
                       </div>
                     </SwiperSlide>
@@ -911,7 +911,7 @@ const Home = () => {
                 <div className="py-[5px] sm1:px-[10px]">
                   <input
                     placeholder="Добавьте комментариий..."
-                    className="pb-[15px] w-full text-[14px] outline-none bg-transparent text-[#000] dark:text-[#F5F5F5] placeholder:text-[#7F7F7F] placeholder:text-[14px] border-b border-[#262626]"
+                    className="pb-[15px] w-full text-[14px] outline-none bg-transparent text-[#000] dark:text-[#F5F5F5] placeholder:text-[#7F7F7F] placeholder:text-[14px] border-b ark:border-[#262626] border-[#d2d2d2]"
                   ></input>
                 </div>
               </div>
@@ -994,35 +994,35 @@ const Home = () => {
             sx={{
               padding: 0,
               backgroundColor: "#2f2f2f",
-              borderRadius: "10px",
+              borderRadius: "12px",
             }}
             className="w-[400px] md:w-[260px]"
           >
-            <ul className="flex flex-col">
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#eD4956] text-[13px] font-[700]">
+            <ul className="flex flex-col bg-[#FFF] dark:bg-[#2f2f2f]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#eD4956] text-[13px] font-[700]">
                 Пожаловаться
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#eD4956] text-[13px]  font-[700]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#eD4956] text-[13px]  font-[700]">
                 Отменить подписку
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#000] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#fff] text-[13px]">
                 Добавить в избранное
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#000] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#fff] text-[13px]">
                 Перейти к публикации
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#000] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#fff] text-[13px]">
                 Поделиться…
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#000] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#fff] text-[13px]">
                 Копировать ссылку
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#000] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#fff] text-[13px]">
                 Вставить на сайт
               </Link>
               <button
                 onClick={handleClose}
-                className="py-[12px] border-b border-[#414141] text-center text-[#000] dark:text-[#000] text-[13px]"
+                className="py-[12px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#fff] text-[13px]"
               >
                 Отмена
               </button>

@@ -1,10 +1,24 @@
 import React from "react";
+import "./Profile.css"
 import person from "../../assets/profile.jpg";
 // import person1 from "./1.png";
 import person2 from "./2.jpg";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import { Link } from "react-router-dom";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import ListItemText from '@mui/material/ListItemText';
+import ListItem from '@mui/material/ListItem';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
+import Slide from '@mui/material/Slide';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 const itemData = [
   {
     img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
@@ -55,10 +69,21 @@ const itemData = [
     title: "Bike",
   },
 ];
-
-import Dialog from "@mui/material/Dialog";
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 import DialogContent from "@mui/material/DialogContent";
+import Switcher from "../../components/Switcher/Switcher";
 const Profile = () => {
+  const [menuMobile, setMenuMobile] = React.useState(false);
+
+  const handleClickOpenMobile = () => {
+    setMenuMobile(true);
+  };
+
+  const handleCloseMobile = () => {
+    setMenuMobile(false);
+  };
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -73,7 +98,7 @@ const Profile = () => {
       <div className="w-full fixed top-0 left-0 py-[5px] bg-[#FFF] dark:bg-[#000] hidden z-20 px-[20px] md:block border-b border-[#dfdede] dark:border-[#2b2b2b] smm:py-[10px]">
         <div className="flex items-center justify-between">
           <div className="w-[30%]">
-            <Link  className="text-[25px] py-[10px]">
+            <div onClick={handleClickOpenMobile} className="text-[25px] py-[10px]">
             <div className="">
                     <div>
                       <div className="hidden dark:block">
@@ -140,7 +165,7 @@ const Profile = () => {
                       </div>
                     </div>
                     </div>
-            </Link>
+            </div>
           </div>
 
           <div className="flex items-center justify-center w-[30%]">
@@ -184,7 +209,6 @@ const Profile = () => {
                       </div>
                     </div>
                     </div>
-             
             </h1>
           </div>
         </div>
@@ -468,15 +492,16 @@ const Profile = () => {
               </h1>
             </Link>
           </div>
-          <div>
+          <div className="md:pb-[60px]">
             <ImageList cols={3}>
               {itemData.map((item) => (
-                <ImageListItem key={item.img}>
+                <ImageListItem key={item.img} className="">
                   <img
                     src={item.img}
                     // srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                     alt={item.title}
                     loading="lazy"
+                    className="image"
                   />
                 </ImageListItem>
               ))}
@@ -497,48 +522,48 @@ const Profile = () => {
               backgroundColor: "#2f2f2f",
               borderRadius: "10px",
             }}
-            className="w-[400px] md:w-[260px]"
+            className="min-w-[300px] md:w-[260px]"
           >
-            <ul className="flex flex-col">
-              <Link
+              <ul className="flex flex-col bg-[#FFF] dark:bg-[#2f2f2f]">
+              <Link 
                 to={"/account/password/change"}
-                className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]"
+                className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]"
               >
                 Сменить пароль
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Профессиональный аккаунт
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 QR-код
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Приложения и сайты
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Уведомления
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Конфиденциальность и безопасность
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Контроль
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Входы в аккаунт
               </Link>
-              <Link className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
+              <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
                 Электронные письма от Instagram
               </Link>
               <Link
                 to={"/login"}
-                className="py-[14px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]"
+                className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]"
               >
                 Выйти
               </Link>
               <button
                 onClick={handleClose}
-                className="py-[12px] border-b border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]"
+                className="py-[12px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]"
               >
                 Отмена
               </button>
@@ -546,6 +571,150 @@ const Profile = () => {
           </DialogContent>
         </Dialog>
       </div>
+      <Dialog
+      fullScreen
+        open={menuMobile}
+        onClose={handleCloseMobile}
+        TransitionComponent={Transition}
+      >
+        <AppBar sx={{boxShadow:'none'}}>
+          <Toolbar className="bg-[#ffffff] dark:bg-[#000]">
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleCloseMobile}
+              aria-label="close"
+            >
+              <CloseIcon className="text-[#000] dark:text-[#FFF]"/>
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <List className="bg-[#fff] dark:bg-[#000] pt-[50px]">
+        <div className="flex items-center  px-[15px] py-[12px] bg-[#535353]">
+          <h1 className="font-[500]">Аккаунт</h1>
+          </div>
+          <Divider />
+          <div className="flex items-center  px-[15px] py-[5px] bg-[#f4f4f4] dark:bg-[#131313] dark:text-[#a1a1a1]">
+          {/* <h1 className="font-[500] uppercase">Аккаунт</h1> */}
+          </div>
+          <Divider />
+          <div className="flex items-center  px-[15px] py-[12px] bg-[#f4f4f4] dark:bg-[#131313] dark:text-[#a1a1a1]">
+          <h1 className="font-[500] uppercase">Аккаунт</h1>
+          </div>
+          <Divider />
+          <Link to={"/account/edit"} className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Редактировать профиль</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Профессиональный аккаунт</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Ваши действия</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">QR-код</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link to={"/account/password/change"} className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Сменить пароль</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Конфиденциальность и безопасность</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Реклама</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Контроль</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Входы в аккаунт</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Электронные письма от Instagram</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link  className="flex items-center justify-between pl-[30px] py-[12px]">
+          <h1 className="font-[600] text-[13px] text-[#0095F6]">Переключиться на личный аккаунт</h1>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <div className="flex items-center  px-[15px] py-[12px] bg-[#f4f4f4] dark:bg-[#131313] dark:text-[#a1a1a1]">
+          <h1 className="font-[500] uppercase">Настройки</h1>
+          </div>
+          <Divider />
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Язык</h1>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          
+          <div className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Переключить тему</h1>
+          <Switcher/>
+          </div>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Приложения и сайты</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Уведомления</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <div className="flex items-center  px-[15px] py-[12px] bg-[#f4f4f4] dark:bg-[#131313] dark:text-[#a1a1a1]">
+          <h1 className="font-[500] uppercase">Информация</h1>
+          </div>
+          <Divider />
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Реклама</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Помощь</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link    className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Сообщение о проблеме</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <Link  className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] dark:text-[#FFF]">Ещё</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+          <div className="flex items-center px-[15px] py-[5px] bg-[#f4f4f4] dark:bg-[#131313] dark:text-[#a1a1a1]">
+          <h1 className="font-[500] uppercase"></h1>
+          </div>
+          <Divider />
+          <Link to={"/login"} className="flex items-center justify-between px-[15px] py-[12px]">
+          <h1 className="font-[500] text-[#ED4956]">Выйти</h1>
+<ArrowForwardIosIcon className="text-[#6b6b6b]" sx={{fontSize:"16px"}}/>
+          </Link>
+          <Divider className="dark:bg-[#404040]"/>
+        </List>
+      </Dialog>
     </>
   );
 };

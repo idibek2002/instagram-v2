@@ -411,7 +411,7 @@ const Edit = () => {
                   <h1 className="text-[#000] dark:text-[#FFF] font-[500]"></h1>
                 </div>
                 <div className="w-[100%] flex items-center justify-between gap-x-[10px] sm:flex-col sm:gap-y-[10px] ">
-                  <button className="py-[5px] px-[15px] bg-[#0095F6] text-[#000] dark:text-[#FFF] rounded-[10px]">
+                  <button className="py-[5px] px-[15px] bg-[#0095F6] text-[#FFF] font-[600] dark:text-[#FFF] rounded-[10px]">
                     Отправить
                   </button>
                   <h1 className="text-[#0095F6] font-[600] text-[12px]">
