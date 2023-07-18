@@ -625,7 +625,7 @@ const Layout = () => {
                     </div>
                   )}
                 </div>
-                <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden" style={location.pathname=="/reels"?{fontWeight:"700"}:{fontWeight:"400"}}>
+                <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden" style={location.pathname=="/reels"?{fontWeight:"700"}:{fontWeight:"600"}}>
                   Reels
                 </h1>
               </Link>
