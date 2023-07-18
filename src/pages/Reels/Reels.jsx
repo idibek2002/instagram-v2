@@ -8,9 +8,9 @@ const Reels = () => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   return (
     <div>
-      <section className="flex flex-col gap-[50px] items-center justify-center bg-[#FFF] text-[#FFF] dark:bg-black py-[20px]">
-        <div class="reel__container rounded-[10px] relative bg-black sm:max-w-[90%] sm:h-[80vh] h-[650px] w-[380px] flex flex-col justify-between">
-        <div class="reel__content px-[15px] z-40 pb-[20px] bg-transparent absolute bottom-[10px] left-0 w-[380px] flex  justify-between">
+      <section className="flex flex-col gap-[50px] items-center gap-y-[50px] justify-center bg-[#FFF] text-[#FFF] dark:bg-black py-[20px] md:pb-[80px]">
+        <div class="reel__container rounded-[10px] relative bg-black sm1:w-[90%] w-[380px] min-h-[80vh] flex flex-col justify-between">
+        <div class="reel__content px-[15px] pb-[20px] bg-transparent absolute bottom-[10px] left-0 w-full flex  justify-between">
             <div class="reel__desc">
               <div class="reel__user">
                 <img
@@ -223,13 +223,13 @@ const Reels = () => {
               />
             </div>
           </div>
-          <div className="w-full h-screen">
-            <video src={video} autoPlay muted className="object-cover w-full h-[650px] rounded-[10px]"></video>
+          <div className="w-full min-h-[90vh]">
+            <video src={video} autoPlay muted className="object-cover w-full min-h-[95vh] rounded-[10px]"></video>
           </div>
           
         </div>
-        <div class="reel__container rounded-[10px] relative bg-black sm:max-w-[90%] sm:h-[80vh] h-[650px] w-[380px] flex flex-col justify-between">
-        <div class="reel__content px-[15px] z-40 pb-[20px] bg-transparent absolute bottom-[10px] left-0 w-[380px] flex  justify-between">
+        <div class="reel__container rounded-[10px] relative bg-black sm1:w-[90%] w-[380px] min-h-[90vh] flex flex-col justify-between">
+        <div class="reel__content px-[15px] pb-[20px] bg-transparent absolute bottom-[10px] left-0 w-full flex  justify-between">
             <div class="reel__desc">
               <div class="reel__user">
                 <img
@@ -442,8 +442,8 @@ const Reels = () => {
               />
             </div>
           </div>
-          <div className="w-full h-screen">
-            <video src={video} autoPlay muted className="object-cover w-full h-[650px] rounded-[10px]"></video>
+          <div className="w-full min-h-[90vh]">
+            <video src={video} autoPlay muted className="object-cover w-full min-h-[90vh] rounded-[10px]"></video>
           </div>
           
         </div>
