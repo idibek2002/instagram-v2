@@ -1,8 +1,27 @@
 import React, { useState } from "react";
 import "./SignUp.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import image from "./img/image.jpg"
+import { axiosLogin, saveToken } from "../../utils/AxiosRequest";
 const SignUp = () => {
+  const navigate = useNavigate()
+  const register=async (event)=>{
+    event.preventDefault();
+    let user ={
+      email:event.target["email"].value,
+      fullname:event.target["fullname"].value,
+      username:event.target["username"].value,
+      password:event.target["password"].value
+    }
+    try{
+      const {data} = await axiosLogin.post('register', user)
+      console.log(data);
+      saveToken(data.accessToken, true)
+      navigate("/login")
+    }catch(error){
+      console.log(error);
+    }
+  }
   return (
     <div className=" bg-[#FFF] h-[100%] w-full flex items-center justify-center pt-[30px]">
     <span className="">
@@ -62,20 +81,20 @@ const SignUp = () => {
                   <h1 className="text-[18px] w-[80%] mx-auto text-center pb-[20px] text-[#737373]">Зарегистрируйтесь, чтобы смотреть фото и видео ваших друзей.</h1>
                 </div>
                 <div className="form-wrap">
-                  <form className="form">
+                  <form onSubmit={(e)=>register(e)} className="form">
 
                     <div className="input-box">
-                      <input type="text" id="name" aria-describedby="" placeholder="Телефон, имя пользователя или эл. адрес" aria-required="true" maxlength="30" autocapitalize="off" autocorrect="off" name="username" required/>
+                      <input type="text" id="name" placeholder="Телефон, имя пользователя или эл. адрес" aria-required="true"  name="email" required/>
                     </div>  
                     <div className="input-box">
-                      <input type="text" id="name" aria-describedby="" placeholder="Имя и фамилия" aria-required="true" maxlength="30" autocapitalize="off" autocorrect="off" name="username" required/>
+                      <input type="text" id="name" placeholder="Имя и фамилия" aria-required="true"  name="fullname" required/>
                     </div>  
                     <div className="input-box">
-                      <input type="text" id="name" aria-describedby="" placeholder="Имя пользователя" aria-required="true" maxlength="30" autocapitalize="off" autocorrect="off" name="username" required/>
+                      <input type="text" id="name"  placeholder="Имя пользователя" aria-required="true" name="username" required/>
                     </div>  
 
                     <div className="input-box">
-                      <input type="password" name="password" id="password" placeholder="Пароль" aria-describedby="" maxlength="30" aria-required="true" autocapitalize="off" autocorrect="off" required/>
+                      <input type="password" name="password" id="password" placeholder="Пароль" maxlength="30" aria-required="true" required/>
                     </div>  
                     <p className="w-[80%] mx-auto text-[12px] text-center py-[10px]">Люди, которые пользуются нашим сервисом, могли загрузить вашу контактную информацию в Instagram. </p>
                     <p className="w-[80%] mx-auto text-[12px] text-center py-[10px]">Регистрируясь, вы принимаете наши <Link className="text-[#00376B]">Условия</Link>  <Link className="text-[#00376B]">Политику конфиденциальности</Link> и <Link className="text-[#00376B]">Политику в отношении файлов cookie</Link></p>

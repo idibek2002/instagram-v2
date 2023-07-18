@@ -522,7 +522,7 @@ const Profile = () => {
               backgroundColor: "#2f2f2f",
               borderRadius: "10px",
             }}
-            className="min-w-[300px] md:w-[260px]"
+            className="min-w-[400px] md:min-w-[350px] sm:min-w-[270px]"
           >
               <ul className="flex flex-col bg-[#FFF] dark:bg-[#2f2f2f]">
               <Link 

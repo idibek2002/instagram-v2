@@ -1,8 +1,24 @@
 import React, { useState } from "react";
 import "./Login.css";
 import image from "./img/image.jpg"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { axiosLogin, saveToken } from "../../utils/AxiosRequest";
 const Login = () => {
+  const navigate = useNavigate()
+  const onSubmit=async (event)=>{
+    event.preventDefault();
+    let user ={
+      email:event.target["username"].value,
+      password:event.target["password"].value
+    }
+    try{
+      const {data} = await axiosLogin.post(`login`, user)
+      saveToken(data.accessToken, true)
+      navigate("/")
+    }catch(error){
+      console.log(error);
+    }
+  }
   return (
     <div className=" bg-[#FFF] h-[100%] w-full flex items-center justify-center pt-[30px]">
     <span className="">
@@ -58,14 +74,14 @@ const Login = () => {
             </h1>
                 </div>
                 <div className="form-wrap">
-                  <form className="form">
+                  <form onSubmit={(event)=>onSubmit(event)} className="form">
 
                     <div className="input-box">
-                      <input type="text" id="name" aria-describedby="" placeholder="Телефон, имя пользователя или эл. адрес" aria-required="true" maxlength="30" autocapitalize="off" autocorrect="off" name="username" required/>
+                      <input type="text" id="name" placeholder="Телефон, имя пользователя или эл. адрес" aria-required="true" name="username" required/>
                     </div>  
 
                     <div className="input-box">
-                      <input type="password" name="password" id="password" placeholder="Пароль" aria-describedby="" maxlength="30" aria-required="true" autocapitalize="off" autocorrect="off" required/>
+                      <input type="password" name="password" id="password" placeholder="Пароль" required/>
                     </div>  
 
                     <span className="button-box">
@@ -162,4 +178,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Login

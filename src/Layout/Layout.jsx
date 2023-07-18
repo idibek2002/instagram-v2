@@ -19,15 +19,24 @@ import MenuList from "@mui/material/MenuList";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Search from "../components/Search/Search";
+import { destroyToken } from "../utils/AxiosRequest";
+import Direct from "../components/Direct/Direct";
 
 const Layout = () => {
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);
+  const [searchModal, setsearchModal] = useState(false);
   const anchorRef = React.useRef(null);
   const anchorRef1 = React.useRef(null);
 
+  const handleClickOpenSearch = () => {
+    setsearchModal(true);
+  };
+  const handleClickCloseSearch = () => {
+    setsearchModal(false);
+  };
   const handleClickOpen = () => {
     setOpen2(true);
   };
@@ -154,6 +163,7 @@ const Layout = () => {
               </div>
             </h1>
           </div>
+          {/* <Search modalShow={searchModal}/> */}
           <div className="pt-[20px] flex flex-col justify-between h-[90%] bg-[#fff] dark:bg-[#000]">
             <ul className="flex flex-col gap-y-[5px]">
               <Link
@@ -249,6 +259,9 @@ const Layout = () => {
                     </div>
                   )}
                 </div>
+                <div className="hidden">
+                <Switcher/>
+                </div>
                 <h1
                   className="text-[15px] font-[600] text-[#000] dark:text-[#F5F5F5] app:hidden"
                   style={
@@ -260,7 +273,7 @@ const Layout = () => {
                   Главная
                 </h1>
               </Link>
-              <div className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
+              <div onClick={()=>setsearchModal(!searchModal)} className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
                 <div className="flex items-center justify-center">
                   <div>
                     <div className="hidden dark:block">
@@ -411,10 +424,11 @@ const Layout = () => {
                   Интересное
                 </h1>
               </div>
-              <Link className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
-                <div className="flex items-center justify-center">
-                  <div>
-                    <div className="hidden dark:block">
+              <Link to={"/reels"} className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
+              <div className="flex items-center justify-center">
+                  {location.pathname == "/reels" ? (
+                    <div>
+                       <div className="hidden dark:block">
                       <svg
                         aria-label="Reels"
                         class="_ab6-"
@@ -483,7 +497,7 @@ const Layout = () => {
                         width="24"
                       >
                         <line
-                          fill="none"
+                          fill="#000"
                           stroke="currentColor"
                           stroke-linejoin="round"
                           stroke-width="2"
@@ -528,9 +542,90 @@ const Layout = () => {
                         ></path>
                       </svg>
                     </div>
-                  </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="hidden dark:block">
+                      <svg
+                        aria-label="Reels"
+                        class="_ab6-"
+                        color="rgb(245, 245, 245)"
+                        fill="rgb(245, 245, 245)"
+                        height="24"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="24"
+                      >
+                        <line
+                          fill="#000"
+                          stroke="currentColor"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          x1="2.049"
+                          x2="21.95"
+                          y1="7.002"
+                          y2="7.002"
+                        ></line>
+                        <line
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          x1="13.504"
+                          x2="16.362"
+                          y1="2.001"
+                          y2="7.002"
+                        ></line>
+                        <line
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          x1="7.207"
+                          x2="10.002"
+                          y1="2.11"
+                          y2="7.002"
+                        ></line>
+                        <path
+                          d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                        ></path>
+                        <path
+                          d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
+                          fill-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </div>
+                      <div className="dark:hidden">
+                        <svg
+                          aria-label="Главная"
+                          class="_ab6-"
+                          color="#000"
+                          fill="#000"
+                          height="24"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <path
+                            d="M9.005 16.545a2.997 2.997 0 0 1 2.997-2.997A2.997 2.997 0 0 1 15 16.545V22h7V11.543L12 2 2 11.543V22h7.005Z"
+                            fill="rgb(245, 245, 245)"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                          ></path>
+                        </svg>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden">
+                <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden" style={location.pathname=="/reels"?{fontWeight:"700"}:{fontWeight:"400"}}>
                   Reels
                 </h1>
               </Link>
@@ -1250,9 +1345,9 @@ const Layout = () => {
                                   </div>
                                   <div className="border-t border-[#5a5a5a] my-[12px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] text-[#000] dark:text-[#FFF]"></div>
                                   <div className="mx-[7px] px-[5px] rounded-[7px] py-[8px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] text-[#000] dark:text-[#FFF]">
-                                    <Link
-                                      to={"/login"}
-                                      className="flex items-center px-[15px] py-[5px] font-[500]"
+                                    <div
+                                        onClick={destroyToken}
+                                      className="flex items-center px-[15px] py-[5px] font-[500] cursor-pointer"
                                       style={{
                                         fontSize: "14px",
                                         width: "100%",
@@ -1260,7 +1355,7 @@ const Layout = () => {
                                       }}
                                     >
                                       Выйти
-                                    </Link>
+                                    </div>
                                   </div>
                                 </div>
                               </MenuList>

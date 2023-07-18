@@ -12,6 +12,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Checkbox from "@mui/material/Checkbox";
 import videoFrilancer from "../../assets/028. FLEXBOX.....mp4";
+import History from "../../components/History/History";
 const Home = () => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const [open, setOpen] = React.useState(false);
@@ -143,32 +144,21 @@ const Home = () => {
       </div>
       <div className="max-w-[1000px] mx-auto pt-[30px] md:pt-[50px] flex justify-between  bg-[#fff] dark:bg-[#000]">
         <div className="py-[20px] w-[80%] idi:mx-auto sm:w-full">
-          <div className="stories w-[85%] px-[10px] sm:w-full mx-auto relative overflow-x-scroll flex items-center gap-x-[20px]">
-            <div className=" ">
-              <div className="w-[60px] h-[60px] rounded-[50%] border-2 overflow-hidden person">
-                <img src={person} alt="" className="border-[50%]" />
-              </div>
-              <h1 className="text-[12px] font-[500] text-[#000] dark:text-[#F5F5F5] pt-[5px]">
-                idibek_02
-              </h1>
-            </div>
-
-            <div className=" ">
-              <div className="w-[60px] h-[60px] rounded-[50%] border-2 overflow-hidden person">
-                <img src={person} alt="" />
-              </div>
-              <h1 className="text-[12px] font-[500] text-[#000] dark:text-[#F5F5F5] pt-[5px]">
-                idibek_02
-              </h1>
-            </div>
-            <div className=" ">
-              <div className="w-[60px] h-[60px] rounded-[50%] border-2 overflow-hidden person">
-                <img src={person} alt="" />
-              </div>
-              <h1 className="text-[12px] font-[500] text-[#000] dark:text-[#F5F5F5] pt-[5px]">
-                idibek_02
-              </h1>
-            </div>
+          <div className="stories w-[90%] px-[10px] sm:w-full mx-auto relative overflow-x-scroll flex items-center gap-x-[20px]">
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
+            <History title="idibek_02" image={person}/>
           </div>
           <div className="post w-[100%] py-[20px] flex flex-col gap-y-[20px] relative justify-center items-center">
             <div className="grid grid-cols-1 gap-y-[20px]">

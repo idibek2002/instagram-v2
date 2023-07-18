@@ -4,6 +4,7 @@ import UseDarkSide from '../hook/UseDarkSide.js'
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
+import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 28,
@@ -62,8 +63,8 @@ const Switcher = () => {
         onChange={toggleDarkMode}
         size={26}
         /> */}
-        <Stack direction="row" spacing={1} alignItems="center" onChange={toggleDarkMode}>
-        <AntSwitch checked={darkSide} 
+        <Stack direction="row" spacing={1} alignItems="center" >
+        <AntSwitch checked={darkSide} onChange={toggleDarkMode}
          inputProps={{ 'aria-label': 'ant design' }} />
       </Stack>
         </div>
