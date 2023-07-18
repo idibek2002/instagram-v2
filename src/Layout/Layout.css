@@ -24,7 +24,8 @@
  }
 }
 .image{
-  width: 100%;
-  min-height: 500px;
+  width: 400px;
+  min-height: 400px;
+  object-position: center;
   object-fit: cover;
 }

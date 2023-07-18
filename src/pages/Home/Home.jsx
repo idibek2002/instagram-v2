@@ -237,9 +237,9 @@ const Home = () => {
                       >
                         {/* <img src={person} alt="" className="w-full" /> */}
                         {mutedd ? (
-                          <video className="image" src={videoFrilancer} autoPlay muted></video>
+                          <video className="image1" src={videoFrilancer} autoPlay muted></video>
                         ) : (
-                          <video className="image" src={videoFrilancer} controls autoPlay></video>
+                          <video className="image1" src={videoFrilancer} controls autoPlay></video>
                         )}
                       </div>
                     </SwiperSlide>

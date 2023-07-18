@@ -20,9 +20,20 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Search from "../components/Search/Search";
 import { destroyToken } from "../utils/AxiosRequest";
-import Direct from "../components/Direct/Direct";
+import ReactFileReader from 'react-file-reader';
 
 const Layout = () => {
+  const [input, setInput] = useState([]);
+
+  function _treat(e) {
+    const { files } = e.target;
+    let images = [];
+    const selecteds = [...[...files]];
+
+    selecteds.forEach((i) => images.push(URL.createObjectURL(i)));
+
+    setInput(images);
+  }
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -87,6 +98,7 @@ const Layout = () => {
     i18n.changeLanguage(Language);
   };
   const location = useLocation();
+
   return (
     <>
       <div className="flex bg-[#fff] dark:bg-[#000] w-full">
@@ -662,7 +674,7 @@ const Layout = () => {
                     </div>
                   )}
                 </div>
-                <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden" style={location.pathname=="/reels"?{fontWeight:"700"}:{fontWeight:"600"}}>
+                <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden" style={location.pathname=="/reels"?{fontWeight:"700"}:{fontWeight:"500"}}>
                   Reels
                 </h1>
               </Link>
@@ -2066,7 +2078,7 @@ const Layout = () => {
           aria-describedby="alert-dialog-description"
         >
           <DialogContent
-            className="min-w-[500px] h-[550px] sm:w-[50%]"
+            className="w-[500px] h-[539px] sm:w-[350px] sm:h-[400px] sm1:w-[270px]"
             sx={{
               padding: 0,
               backgroundColor: "#2f2f2f",
@@ -2078,7 +2090,7 @@ const Layout = () => {
                 Создание публикации
               </h1>
             </ul>
-            <div className="grid place-items-center h-[490px] bg-[#FFF] dark:bg-[#2f2f2f]">
+            <div className="grid place-items-center h-[80%] bg-[#FFF] dark:bg-[#2f2f2f]">
               <div className="flex flex-col items-center">
                 <div className="flex items-center justify-center">
                   <div>
@@ -2142,7 +2154,7 @@ const Layout = () => {
                     </div>
                   </div>
                 </div>
-                <h1 className="text-[#000] dark:text-[#FFF] font-[500] text-[18px] py-[10px]">
+                <h1 className="text-[#000] dark:text-[#FFF] font-[500] text-[18px] py-[10px] sm1:text-[15px]">
                   Перетащите сюда фото и видео
                 </h1>
                 <div className="py-[15px]">
@@ -2156,9 +2168,11 @@ const Layout = () => {
                     type="file"
                     id="files"
                     className="hidden"
-                    onChange={() => {
+                    multiple
+                    onChange={(e) => {
                       handleClickOpen1();
                       handleClose3();
+                      _treat(e)
                     }}
                   />
                 </div>
@@ -2182,7 +2196,7 @@ const Layout = () => {
               backgroundColor: "#2f2f2f",
               borderRadius: "10px",
             }}
-            className="h-[550px] md:h-[450px]"
+            className=""
           >
             <div className="flex items-center justify-between py-[10px] px-[15px] border-b dark:border-[#424141] border-[#d3d3d3] dark:bg-[#2f2f2f] bg-[#FFF]">
               <div
@@ -2275,8 +2289,8 @@ const Layout = () => {
               </div>
             </div>
             <div className="flex items-start justify-center w-full md:flex-col bg-[#FFF] dark:bg-[#2f2f2f]">
-              <div className="max-w-[500px] h-[500px] object-cover flex items-center justify-center md:h-auto">
-                <img src={person1} alt="" className="image" />
+              <div className="w-[500px] h-[500px] relative flex items-center justify-center md:w-[300px] md:h-[300px] sm1:w-full sm1:h-full">
+                <img src={input} alt="" className="w-full h-full object-cover" />
               </div>
               <div className="px-[15px] py-[20px] w-[300px] md:w-full">
                 <Stack
@@ -2293,7 +2307,6 @@ const Layout = () => {
                 </Stack>
                 <div className="py-[15px] w-full">
                   <textarea
-                    rows={10}
                     className="w-full h-auto bg-transparent text-[#000] dark:text-[#FFF] outline-none"
                     placeholder="Добавьте подпись…"
                   ></textarea>
