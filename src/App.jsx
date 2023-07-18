@@ -8,12 +8,13 @@ import {
   Edit,
   ChangePassword,
   SignUp,
+  Reels,
+  Interesting
 } from "./Routes/Routes";
 import { Suspense } from "react";
 import LoaderPage from "./components/LoaderPage/LoaderPage";
 import AuthCheck from "./utils/AuthCheck";
 import ProtectedRoute from "./utils/ProtectedRoute";
-import Reels from "./pages/Reels/Reels";
 
 function App() {
   const router = createBrowserRouter([
@@ -61,6 +62,14 @@ function App() {
           element: (
             <Suspense fallback={<LoaderPage />}>
               <Reels />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/interesting",
+          element: (
+            <Suspense fallback={<LoaderPage />}>
+              <Interesting />
             </Suspense>
           ),
         },
