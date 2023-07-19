@@ -20,8 +20,8 @@ const Login = () => {
     }
   }
   return (
-    <div className=" bg-[#FFF] h-[100%] w-full flex items-center justify-center pt-[30px]">
-    <span className="">
+    <div className="bg-[#FFF] w-full flex items-center justify-center pt-[30px]">
+    <span>
         <section className="section-all">
       <main className="main flex items-center justify-center gap-x-[50px]">
       <div className="flex items-center justify-end w-[50%] md:hidden">
@@ -113,49 +113,49 @@ const Login = () => {
       </main>  
     </section>
     
-    <footer className="w-full bg-[#FFF] dark:bg-[#000] flex items-center pb-[30px] pt-[50px]">
+    <footer className="w-full bg-[#FFF]  flex items-center pb-[30px] pt-[50px]">
             <div className="w-full">
               <ul className="flex items-center justify-center flex-wrap gap-x-[15px] gap-y-[5px] text-center">
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Meta
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Информация
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Блог
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Вакансия
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Помощ
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   API
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Конфиденциальность
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className="text-[#000] hover:underline text-[12px] text-center">
                   Условия
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Популярные аккаунты
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Места
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Instagram Lite
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Threads
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Загрузка контактов и лица, не являющиеся пользователями
                 </Link>
-                <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
+                <Link className=" text-[#000] hover:underline text-[12px] text-center">
                   Meta Verified
                 </Link>
               </ul>

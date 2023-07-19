@@ -21,6 +21,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Search from "../components/Search/Search";
 import { destroyToken } from "../utils/AxiosRequest";
 import ReactFileReader from 'react-file-reader';
+import { createMuiTheme } from "@mui/material";
 
 const Layout = () => {
   const [input, setInput] = useState([]);
@@ -97,12 +98,11 @@ const Layout = () => {
   const changeLanguages = (Language) => {
     i18n.changeLanguage(Language);
   };
-  const location = useLocation();
-
+  const location = useLocation(); 
   return (
     <>
       <div className="flex bg-[#fff] dark:bg-[#000] w-full">
-        <div className="appBar min-w-[245px] app:min-w-[70px] md:hidden sticky z-40 top-0 left-0 h-screen border-r dark:border-[#2b2b2b] border-[#d3d3d3] bg-[#fff] dark:bg-[#000] py-[15px] px-[10px]">
+        <div className="appBar w-[245px] app:w-[70px] md:hidden fixed z-40 top-0 left-0 h-screen border-r dark:border-[#2b2b2b] border-[#d3d3d3] bg-[#fff] dark:bg-[#000] py-[15px] px-[10px]">
           <div className="logo flex items-center justify-start h-[73px] px-[15px] py-[20px]">
             <h1 className="hidden app:block">
               <div className="hidden dark:block">
@@ -2005,10 +2005,10 @@ const Layout = () => {
           </div>
         </div>
         <div className="w-full relative flex flex-col justify-between">
-          <div className="bg-[#fff] dark:bg-[#000]">
+          <div className="bg-[#fff] dark:bg-[#000] ml-[10%] app:ml-0 md:pb-[30px]">
             <Outlet />
           </div>
-          <footer className="w-full bg-[#fff] dark:bg-[#000] flex items-center pt-[20px] pb-[30px] md:hidden">
+          <footer className="w-full bg-[#fff] dark:bg-[#000] pl-[17%] md:pl-0 flex items-center px-[20px] pt-[20px] pb-[30px] md:hidden">
             <div className="w-full">
               <ul className="flex items-center justify-center flex-wrap gap-x-[15px] gap-y-[5px] text-center">
                 <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
@@ -2076,13 +2076,13 @@ const Layout = () => {
           onClose={handleClose3}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
+          
         >
           <DialogContent
-            className="w-[500px] h-[539px] sm:w-[350px] sm:h-[400px] sm1:w-[270px]"
+            className="w-[500px] h-[540px] sm:w-[350px] sm:h-[400px] sm1:w-[270px]"
             sx={{
               padding: 0,
               backgroundColor: "#2f2f2f",
-              borderRadius: "10px",
             }}
           >
             <ul className="flex flex-col bg-[#FFF] dark:bg-[#2f2f2f]">
@@ -2090,7 +2090,7 @@ const Layout = () => {
                 Создание публикации
               </h1>
             </ul>
-            <div className="grid place-items-center h-[80%] bg-[#FFF] dark:bg-[#2f2f2f]">
+            <div className="grid place-items-center h-[90.8%] bg-[#FFF] dark:bg-[#2f2f2f]">
               <div className="flex flex-col items-center">
                 <div className="flex items-center justify-center">
                   <div>
@@ -2194,7 +2194,6 @@ const Layout = () => {
             sx={{
               padding: 0,
               backgroundColor: "#2f2f2f",
-              borderRadius: "10px",
             }}
             className=""
           >

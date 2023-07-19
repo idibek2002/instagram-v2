@@ -22,8 +22,8 @@ function App() {
       path: "/",
       element:
       <ProtectedRoute>
-        <Layout />
-       </ProtectedRoute>,
+      <Layout />
+      </ProtectedRoute>,
       children: [
         {
           index: true,
@@ -81,7 +81,7 @@ function App() {
         <Suspense fallback={<LoaderPage />}>
           <AuthCheck>
           <Login />
-          </AuthCheck>
+         </AuthCheck>
         </Suspense>
       ),
     },
@@ -96,6 +96,11 @@ function App() {
       ),
     },
   ]);
+
+// setTimeout(function(){
+//     location.reload();
+// }, 1000);
+
 
   return (
     <>

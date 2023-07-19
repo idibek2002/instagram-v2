@@ -106,7 +106,7 @@ const SignUp = () => {
                 </div>
               </div>
               <div className="login-box">
-                <p className="text font-[600]">У вас ещё нет аккаунта? <Link to={"/accounts/emailsignup"}>Зарегистрироваться</Link></p>
+                <p className="text font-[600]">Есть аккаунт?<Link to={"/login"}>Вход</Link></p>
               </div>
               <div className="app">
                 <p>Установите приложение.</p>

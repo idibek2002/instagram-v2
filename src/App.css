@@ -5,11 +5,7 @@
 #app {
   height: 100%;
 }
-html,
-body {
-  position: relative;
-  height: 100%;
-}
+
 
 body {
   background: #eee;
@@ -18,6 +14,9 @@ body {
   color: #000;
   margin: 0;
   padding: 0;
+}
+.dark body{
+  background-color: #000;
 }
 
 .swiper {
