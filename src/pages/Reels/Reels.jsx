@@ -3,11 +3,33 @@ import "./Reels.css";
 import video from "../../assets/028. FLEXBOX.....mp4";
 import Checkbox from "@mui/material/Checkbox";
 import person from "../../assets/profile.jpg"
-
+// import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { useRef, useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 const Reels = () => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   return (
-    <div>
+    <div className="">
+      {/* <Swiper
+        direction={'vertical'}
+        // pagination={{
+        //   clickable: true,
+        // }}
+        // modules={[Pagination]}
+        className="mySwiper"
+      >
+        <SwiperSlide className="">
+          Hello
+        </SwiperSlide>
+        <SwiperSlide>
+          Hello
+        </SwiperSlide>
+        <SwiperSlide className="">
+          Hello
+        </SwiperSlide>
+      </Swiper> */}
       <section className="flex flex-col gap-[50px] items-center gap-y-[50px] justify-center bg-[#FFF] text-[#FFF] dark:bg-black py-[20px] md:pb-[80px]">
         <div class="reel__container rounded-[10px] relative bg-black sm1:w-[90%] w-[380px] min-h-[80vh] flex flex-col justify-between">
         <div class="reel__content px-[15px] pb-[20px] bg-transparent absolute z-10 bottom-[10px] left-0 w-full flex  justify-between">
@@ -447,7 +469,7 @@ const Reels = () => {
           </div>
           
         </div>
-      </section>
+      </section> 
     </div>
   );
 };

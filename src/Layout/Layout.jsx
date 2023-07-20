@@ -5,10 +5,8 @@ import { useTranslation } from "react-i18next";
 import Switcher from "../components/Switcher/Switcher";
 import Avatar from "@mui/material/Avatar";
 import person from "../assets/profile.jpg";
-import person1 from "../assets/2.jpg";
 import Stack from "@mui/material/Stack";
 import { useLocation } from "react-router-dom";
-import Button from "@mui/material/Button";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
@@ -18,13 +16,28 @@ import MenuList from "@mui/material/MenuList";
 
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
-import Search from "../components/Search/Search";
-import { destroyToken } from "../utils/AxiosRequest";
-import ReactFileReader from 'react-file-reader';
-import { createMuiTheme } from "@mui/material";
+import { axiosRequest, destroyToken, getToken } from "../utils/AxiosRequest";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { multiFiles } from "../api/files";
+
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+
+
 
 const Layout = () => {
+ 
+  const [open, setOpen] = React.useState(false);
+  const [open1, setOpen1] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
+  const [open3, setOpen3] = React.useState(false);
+  const [searchModal, setsearchModal] = useState(false);
+  const anchorRef = React.useRef(null);
+  const anchorRef1 = React.useRef(null);
   const [input, setInput] = useState([]);
+  const [title, setTitle] = useState("");
+  const [files, setFiles] = React.useState(null);
+  console.log(files);
 
   function _treat(e) {
     const { files } = e.target;
@@ -35,13 +48,40 @@ const Layout = () => {
 
     setInput(images);
   }
-  const [open, setOpen] = React.useState(false);
-  const [open1, setOpen1] = React.useState(false);
-  const [open2, setOpen2] = React.useState(false);
-  const [open3, setOpen3] = React.useState(false);
-  const [searchModal, setsearchModal] = useState(false);
-  const anchorRef = React.useRef(null);
-  const anchorRef1 = React.useRef(null);
+  const addPost = async () => {
+    if (!files) return alert("Please select photo");
+    let post = {
+      title: title,
+      date: Date.now(),
+      likes: 0,
+      likedBy: [],
+      comments: [],
+      media: [],
+      userId: +getToken().sub,
+    };
+
+    let formData = new FormData();
+
+    for (let file of files) {
+      formData.append("files", file);
+    }
+
+    const imgs = await multiFiles(formData);
+    let media = [];
+    imgs.img.forEach((elem) => {
+      media.push({
+        type: elem.mimetype,
+        src: elem.path,
+      });
+    });
+
+    post.media = media;
+
+    try {
+      const { data } = await axiosRequest.post(`posts`, post);
+      setOpen3(false)
+    } catch (err) {}
+  };
 
   const handleClickOpenSearch = () => {
     setsearchModal(true);
@@ -2173,6 +2213,7 @@ const Layout = () => {
                       handleClickOpen1();
                       handleClose3();
                       _treat(e)
+                      setFiles(e.target.files);
                     }}
                   />
                 </div>
@@ -2282,14 +2323,32 @@ const Layout = () => {
                 </h1>
               </div>
               <div>
-                <button className="text-[#0095F6] font-[600]">
+                <button onClick={addPost} className="text-[#0095F6] font-[600]">
                   Поделиться
                 </button>
               </div>
             </div>
             <div className="flex items-start justify-center w-full md:flex-col bg-[#FFF] dark:bg-[#2f2f2f]">
               <div className="w-[500px] h-[500px] relative flex items-center justify-center md:w-[300px] md:h-[300px] sm1:w-full sm1:h-full">
-                <img src={input} alt="" className="w-full h-full object-cover" />
+              <Swiper
+        pagination={{
+          type: 'fraction',
+        }}
+        // navigation={true}
+        // modules={[Pagination, Navigation]}
+        className="mySwiper"
+      >
+        {input.map((e)=>{
+                  return (
+                    <SwiperSlide key={e}>
+                      <img src={e} alt="" className="w-full h-full object-cover" />
+                    </SwiperSlide>
+                  )
+                })}
+      </Swiper>
+                
+            
+
               </div>
               <div className="px-[15px] py-[20px] w-[300px] md:w-full">
                 <Stack
@@ -2306,6 +2365,8 @@ const Layout = () => {
                 </Stack>
                 <div className="py-[15px] w-full">
                   <textarea
+                  value={title}
+                  onChange={(e)=>setTitle(e.target.value)}
                     className="w-full h-auto bg-transparent text-[#000] dark:text-[#FFF] outline-none"
                     placeholder="Добавьте подпись…"
                   ></textarea>
