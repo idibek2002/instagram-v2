@@ -1,11 +1,153 @@
-import React from "react";
-import { Link} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import person from "../../assets/profile.jpg";
+import { axiosRequest, getToken } from "../../utils/AxiosRequest";
+import { multiFiles, singleFile } from "../../api/files";
+import {
+  Avatar,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Stack,
+} from "@mui/material";
+import { Select, Space } from "antd";
+import { styled } from "@mui/material/styles";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import CloseIcon from "@mui/icons-material/Close";
+import LoadingButton from "./Component/LoadingButton";
+const BpIcon = styled("span")(({ theme }) => ({
+  borderRadius: "50%",
+  width: 16,
+  height: 16,
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "0 0 0 1px rgb(16 22 26 / 40%)"
+      : "inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)",
+  backgroundColor: theme.palette.mode === "dark" ? "#394b59" : "#f5f8fa",
+  backgroundImage:
+    theme.palette.mode === "dark"
+      ? "linear-gradient(180deg,hsla(0,0%,100%,.05),hsla(0,0%,100%,0))"
+      : "linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))",
+  ".Mui-focusVisible &": {
+    outline: "2px auto rgba(19,124,189,.6)",
+    outlineOffset: 2,
+  },
+  "input:hover ~ &": {
+    backgroundColor: theme.palette.mode === "dark" ? "#30404d" : "#ebf1f5",
+  },
+  "input:disabled ~ &": {
+    boxShadow: "none",
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(57,75,89,.5)"
+        : "rgba(206,217,224,.5)",
+  },
+}));
+
+const BpCheckedIcon = styled(BpIcon)({
+  backgroundColor: "#137cbd",
+  backgroundImage:
+    "linear-gradient(180deg,hsla(0,0%,100%,.1),hsla(0,0%,100%,0))",
+  "&:before": {
+    display: "block",
+    width: 16,
+    height: 16,
+    backgroundImage: "radial-gradient(#fff,#fff 28%,transparent 32%)",
+    content: '""',
+  },
+  "input:hover ~ &": {
+    backgroundColor: "#106ba3",
+  },
+});
+function BpRadio(props) {
+  return (
+    <Radio
+      disableRipple
+      color="default"
+      checkedIcon={<BpCheckedIcon />}
+      icon={<BpIcon />}
+      {...props}
+    />
+  );
+}
 const Edit = () => {
-  const editData = (e) => {
-    e.preventDefault()
-    console.log(e.target["name"].value);
+  const [user, setUser] = useState();
+  const [name, setName] = useState("");
+  const [username, setUserName] = useState("");
+  const [about, setAbout] = useState("");
+  const [email, setEmail] = useState("");
+  const [numberPhone, setNumberPhone] = useState("");
+  const [gender, setGender] = useState("");
+  const [files, setFiles] = useState();
+  const [modalPost, setModalPost] = useState(false);
+  const [genderModal, setGenderModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const getUser = async () => {
+    try {
+      const { data } = await axiosRequest.get(`users?id=${+getToken().sub}`);
+      setUser(data[0]);
+      setName(data[0].name);
+      setUserName(data[0].username);
+      setEmail(data[0].email);
+      setAbout(data[0]?.about);
+      setNumberPhone(data[0]?.numberPhone);
+      setGender(data[0]?.gender);
+    } catch (e) {
+      console.log(e);
+    }
   };
+
+  const editData = async () => {
+    let userEdit = { ...user };
+    let formData = new FormData();
+
+    if (files) {
+      for (let file of files) {
+        formData.append("files", file);
+      }
+      let avatar = "";
+      const imgs = await multiFiles(formData);
+      imgs.img.forEach((img) => {
+        avatar = img.path;
+      });
+      userEdit.avatar = avatar;
+    }
+    userEdit.name = name;
+    userEdit.username = username;
+    userEdit.about = about;
+    userEdit.email = email;
+    userEdit.numberPhone = numberPhone;
+    userEdit.gender = gender;
+    setLoading(true)
+    try {
+      const { data } = await axiosRequest.patch(
+        `users/${userEdit.id}`,
+        userEdit
+      );
+      getUser();
+      setLoading(false)
+    } catch (e) {}
+  };
+  const deleteAvatar = async () => {
+    let userEdit = { ...user };
+    userEdit.avatar = "";
+    setLoading(true)
+    try {
+      const { data } = await axiosRequest.patch(
+        `users/${userEdit.id}`,
+        userEdit
+      );
+      getUser();
+      setLoading(false)
+    } catch (e) {}
+  };
+  useEffect(() => {
+    getUser();
+  }, []);
   return (
     <div>
       <div className="w-full fixed top-0 left-0 py-[5px] bg-[#FFF] dark:bg-[#000] hidden z-20 px-[20px] md:flex items-center border-b border-[#e5e5e5] dark:border-[#2b2b2b] smm:py-[5px]">
@@ -262,21 +404,29 @@ const Edit = () => {
             </div>
           </div>
           <div className="w-full py-[30px]">
-            <form onSubmit={(e) => editData(e)} action="">
+            <div>
               <div className="w-[90%] mx-auto flex flex-col gap-y-[20px]">
                 <div className="flex gap-x-[20px]">
                   <div className="w-[30%] flex items-center justify-end md:justify-start md:w-[20%]">
-                    <img
-                      src={person}
-                      alt=""
-                      className="w-[42px] rounded-[50%]"
-                    />
+                    <Stack direction="row" spacing={1}>
+                      <Avatar
+                        src={`${import.meta.env.VITE_APP_FILES_URL}${
+                          user?.avatar
+                        }`}
+                        sx={{ Width: 34, Height: 54 }}
+                      />
+                    </Stack>
                   </div>
                   <div className="w-[60%] md:w-full">
-                    <h1 className="text-[#000] dark:text-[#FFF]">idibek_02</h1>
-                    <h1 className="text-[#0095F6] font-[600]">
-                      Изменить фото профиля
+                    <h1 className="text-[#000] font-[600] dark:text-[#FFF]">
+                      {user?.username}
                     </h1>
+                    <button
+                      onClick={() => setModalPost(true)}
+                      className="text-[#0095F6] font-[600]"
+                    >
+                      Изменить фото профиля
+                    </button>
                   </div>
                 </div>
                 <div className="flex gap-x-[20px] md:flex-col">
@@ -288,6 +438,8 @@ const Edit = () => {
                   <div className="w-[60%] md:w-full">
                     <input
                       type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       name="name"
                       className="w-[90%] bg-transparent py-[5px] text-[#000] dark:text-[#FFF] px-[10px] border"
                     />
@@ -310,7 +462,8 @@ const Edit = () => {
                   <div className="w-[60%] md:w-full">
                     <input
                       type="text"
-                      value="idibek_02"
+                      value={username}
+                      onChange={(e) => setUserName(e.target.value)}
                       className="w-[90%] bg-transparent py-[5px] text-[#000] dark:text-[#FFF] px-[10px] border"
                     />
                     <h1 className="text-[#A8A8A8] text-[12px] py-[10px]">
@@ -333,8 +486,9 @@ const Edit = () => {
                       className="w-[90%] bg-[#efefef] dark:bg-[#202020]  border-none py-[5px] px-[10px] border"
                     />
                     <h1 className="text-[#A8A8A8] text-[12px] py-[10px]">
-                      В большинстве случаев у вас будет ещё 14 дней, чтобы снова
-                      изменить имя пользователя на idibek_02. Подробнее
+                      Изменить ссылки можно только в мобильной версии. Перейдите
+                      в приложение Instagram и коснитесь "Редактировать
+                      профиль".
                     </h1>
                   </div>
                 </div>
@@ -347,7 +501,8 @@ const Edit = () => {
                   <div className="w-[60%] md:w-full">
                     <textarea
                       type="text"
-                      value="Frontend developer Лучшие вещи в жизни — бесплатны: объятия, улыбки, друзья, поцелуи, семья, сон, любовь, смех и хорошее настроение."
+                      value={about}
+                      onChange={(e) => setAbout(e.target.value)}
                       className="w-[90%] bg-transparent text-[#000] dark:text-[#FFF] py-[8px] px-[10px] border"
                     />
                   </div>
@@ -376,9 +531,9 @@ const Edit = () => {
                   </div>
                   <div className="w-[60%] md:w-full">
                     <input
-                      type="text"
-                      placeholder="Сайт"
-                      value="idibekrahimov0000@gmail.com"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="w-[90%] bg-transparent text-[#000] dark:text-[#FFF] py-[5px] px-[10px] border"
                     />
                   </div>
@@ -391,9 +546,9 @@ const Edit = () => {
                   </div>
                   <div className="w-[60%] md:w-full">
                     <input
-                      type="text"
-                      placeholder="Сайт"
-                      value="+992 80 006 6698"
+                      type="number"
+                      value={numberPhone}
+                      onChange={(e) => setNumberPhone(e.target.value)}
                       className="w-[90%] bg-transparent text-[#000] dark:text-[#FFF] py-[5px] px-[10px] border"
                     />
                   </div>
@@ -407,8 +562,8 @@ const Edit = () => {
                   <div className="w-[60%] md:w-full">
                     <input
                       type="text"
-                      placeholder="Сайт"
-                      value="Мужской"
+                      value={gender}
+                      onClick={() => setGenderModal(true)}
                       className="w-[90%] bg-transparent text-[#000] dark:text-[#FFF] py-[5px] px-[10px] border"
                     />
                   </div>
@@ -436,18 +591,143 @@ const Edit = () => {
                     <h1 className="text-[#000] dark:text-[#FFF] font-[500]"></h1>
                   </div>
                   <div className="w-[100%] flex items-center justify-between gap-x-[10px] sm:flex-col sm:gap-y-[10px] ">
-                    <button type="submit" className="py-[5px] px-[15px] bg-[#0095F6] text-[#FFF] font-[600] dark:text-[#FFF] rounded-[10px]">
-                      Отправить
+                    <button
+                      onClick={editData}
+                      className="py-[5px] px-[15px] text-[#FFF] font-[600] dark:text-[#FFF] rounded-[10px]"
+                      style={loading?{backgroundColor:"white"}:{backgroundColor:"#0095F6"}}
+                    >
+                      {loading?
+                      <LoadingButton/>:
+                      "Отправить"
+                      }
                     </button>
-                    <h1 className="text-[#0095F6] font-[600] text-[12px]">
+                    <h1 className="text-[#0095F6] w-[250px] font-[600] text-[12px]">
                       Временная деактивация аккаунта
                     </h1>
                   </div>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
+      </div>
+      <div>
+        <Dialog
+          open={modalPost}
+          onClose={() => setModalPost(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogContent
+            sx={{
+              padding: 0,
+              backgroundColor: "#2f2f2f",
+            }}
+            className="min-w-[400px] md:min-w-[350px] sm:min-w-[270px]"
+          >
+            <ul className="flex flex-col bg-[#FFF] dark:bg-[#2f2f2f]">
+              <div
+                onClick={() => {
+                  setModalPost(false);
+                }}
+                className=" text-[20px] cursor-pointer py-[25px] font-[400] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#fff]"
+              >
+                Изменить фото профиля
+              </div>
+              <label
+                htmlFor="files"
+                className="cursor-pointer py-[14px] font-[700] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#0095F6]  text-[14px]"
+              >
+                Загрузить фото
+              </label>
+              <input
+                type="file"
+                id="files"
+                className="hidden"
+                multiple
+                onChange={(e) => {
+                  setFiles(e.target.files);
+                  setModalPost(false);
+                }}
+              />
+              <button onClick={()=>{deleteAvatar()
+              setModalPost(false)}} disabled={user?.avatar?false:true} style={user?.avatar?{opacity:'1'}:{opacity:"0.5"}} className="cursor-pointer py-[14px] font-[700] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#ED4956] text-[14px]">
+                Удалить текущее фото
+              </button>
+              <button
+                onClick={() => setModalPost(false)}
+                className="py-[12px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[14px]"
+              >
+                Отмена
+              </button>
+            </ul>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <div>
+        <Dialog
+          open={genderModal}
+          onClose={() => setGenderModal(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle className="flex items-center justify-between border-b border-b-[#565656] dark:bg-[#2f2f2f]">
+            <div></div>
+            <div className="text-[17px] dark:text-[#fff]">Пол</div>
+            <div>
+              <CloseIcon
+                className="dark:text-[#fff]"
+                onClick={() => setGenderModal(false)}
+              />
+            </div>
+          </DialogTitle>
+          <DialogContent
+            sx={{
+              padding: 0,
+              backgroundColor: "#2f2f2f",
+            }}
+            className="min-w-[500px] md:min-w-[350px] sm:min-w-[270px]"
+          >
+            <ul className="py-[10px] px-[15px] flex flex-col bg-[#FFF] dark:bg-[#2f2f2f]">
+              <FormControl sx={{ paddingY: "10px" }}>
+                <RadioGroup
+                  defaultValue="female"
+                  aria-labelledby="demo-customized-radios"
+                  name="customized-radios"
+                >
+                  <FormControlLabel
+                    onChange={(e) => setGender(e.target.value)}
+                    className="dark:text-[#fff]"
+                    value="Мужский"
+                    control={<BpRadio />}
+                    label="Мужский"
+                  />
+                  <FormControlLabel
+                    onChange={(e) => setGender(e.target.value)}
+                    className="dark:text-[#fff]"
+                    value="Женский"
+                    control={<BpRadio />}
+                    label="Женский"
+                  />
+                  <FormControlLabel
+                    onChange={(e) => setGender(e.target.value)}
+                    className="dark:text-[#fff]"
+                    value="Предпочитаю не указывать"
+                    control={<BpRadio />}
+                    label="Предпочитаю не указывать"
+                  />
+                </RadioGroup>
+              </FormControl>
+
+              <button
+                onClick={() => setGenderModal(false)}
+                className="py-[12px] font-[600] bg-[#0095F6]  rounded-[10px] text-center text-[#000] dark:text-[#FFF] text-[13px]"
+              >
+                Готово
+              </button>
+            </ul>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

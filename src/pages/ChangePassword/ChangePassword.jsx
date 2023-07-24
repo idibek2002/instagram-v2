@@ -1,7 +1,22 @@
-import React from "react";
-import { Link, RouterProvider } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link} from "react-router-dom";
 import person from "../../assets/profile.jpg";
+import { useState } from "react";
+import { axiosRequest, getToken } from "../../utils/AxiosRequest";
 const ChangePassword = () => {
+  const [user, setUser]=useState()
+  console.log(getToken());
+  const getUsers = async () => {
+    try {
+      const { data } = await axiosRequest.get("users");
+      setUser(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(()=>{
+    getUsers()
+  },[])
   return (
     <div>
       <div className="w-full fixed top-0 left-0 py-[5px] bg-[#FFF] dark:bg-[#000] hidden z-20 px-[20px] md:flex items-center border-b border-[#e5e5e5] dark:border-[#2b2b2b] smm:py-[5px]">

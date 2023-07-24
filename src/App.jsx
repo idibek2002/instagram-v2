@@ -15,6 +15,8 @@ import { Suspense } from "react";
 import LoaderPage from "./components/LoaderPage/LoaderPage";
 import AuthCheck from "./utils/AuthCheck";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import ViewProfile from "./pages/ViewProfile/ViewProfile";
+import Messages from "./pages/Messages/Messages";
 
 function App() {
   const router = createBrowserRouter([
@@ -70,6 +72,22 @@ function App() {
           element: (
             <Suspense fallback={<LoaderPage />}>
               <Interesting />
+            </Suspense>
+          ),
+        },
+        {
+          path: "user/:userId",
+          element: (
+            <Suspense fallback={<LoaderPage />}>
+              <ViewProfile />
+            </Suspense>
+          ),
+        },
+        {
+          path: "messages",
+          element: (
+            <Suspense fallback={<LoaderPage />}>
+              <Messages />
             </Suspense>
           ),
         },

@@ -9,9 +9,11 @@ const SignUp = () => {
     event.preventDefault();
     let user ={
       email:event.target["email"].value,
-      fullname:event.target["fullname"].value,
+      name:event.target["nameUser"].value,
       username:event.target["username"].value,
-      password:event.target["password"].value
+      password:event.target["password"].value,
+      subscribers:[],
+      subscriptions:[]
     }
     try{
       const {data} = await axiosLogin.post('register', user)
@@ -87,7 +89,7 @@ const SignUp = () => {
                       <input type="text" id="name" placeholder="Телефон, имя пользователя или эл. адрес" aria-required="true"  name="email" required/>
                     </div>  
                     <div className="input-box">
-                      <input type="text" id="name" placeholder="Имя и фамилия" aria-required="true"  name="fullname" required/>
+                      <input type="text" id="name" placeholder="Имя" aria-required="true" name="nameUser" required/>
                     </div>  
                     <div className="input-box">
                       <input type="text" id="name"  placeholder="Имя пользователя" aria-required="true" name="username" required/>

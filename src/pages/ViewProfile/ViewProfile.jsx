@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import "./Profile.css";
+import "./ViewProfile.css";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
@@ -16,34 +16,32 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-
+import Switcher from "../../components/Switcher/Switcher";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 import DialogContent from "@mui/material/DialogContent";
-import Switcher from "../../components/Switcher/Switcher";
 import { axiosRequest, getToken } from "../../utils/AxiosRequest";
 import { Avatar, Checkbox, Stack } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
-const Profile = () => {
+
+const ViewProfile = () => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const [menuMobile, setMenuMobile] = React.useState(false);
   const [commentShow, setCommentShow] = useState(false);
   const [commentDialog, setCommentDialog] = useState();
   const [commentDel, setCommentDel] = useState(false);
   const [commentIdDel, setCommentIdDel] = useState({});
-  const [editPost, setEditPost] = useState();
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState();
   const [users, setUsers] = useState();
   const [comment, setComment] = useState("");
-  const [open, setOpen] = React.useState(false);
   const [modalPost, setModalPost] = React.useState(false);
-  const [open3, setOpen3] = React.useState(false);
-  const [title, setTitle] = useState("");
   const [viewFollowers, setViewFollowers] = useState(false);
   const [followers, setFollowers] = useState();
-
+  const [foll, setFoll] = useState(false);
+  const { userId } = useParams();
+  
   const handleClickOpenMobile = () => {
     setMenuMobile(true);
   };
@@ -53,37 +51,32 @@ const Profile = () => {
   const handleClose4 = () => {
     setOpen3(false);
   };
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+ 
   const getPosts = async () => {
     try {
-      const { data } = await axiosRequest.get(
-        `posts?userId=${+getToken().sub}`
-      );
+      const { data } = await axiosRequest.get(`posts?userId=${userId}`);
       setPosts(data);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
+  // const getUser = async () => {
+  //   try {
+  //     const { data } = await axiosRequest.get(`users?id=${+getToken().sub}`);
+  //     setUser(data[0]);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
   const getUsers = async () => {
     try {
       const { data } = await axiosRequest.get(`users`);
       setUsers(data);
-      const user = data.find((user) => user.id === +getToken().sub);
+      const user = data.find((user) => user.id == userId);
       setUser(user);
     } catch (e) {
       console.log(e);
     }
-  };
-  const ditPost = async () => {
-    let post = posts.find((p) => p.id === editPost.id);
-    post.title = title;
-    try {
-      const { data } = await axiosRequest.patch(`posts/${editPost.id}`, post);
-      getPosts();
-    } catch (e) {}
   };
   const toggleLike = async (id) => {
     let post = posts.find((p) => p.id === id);
@@ -102,15 +95,10 @@ const Profile = () => {
   };
   const deleteComment = async (idPost, idComment) => {
     let post = posts.find((p) => p.id === idPost);
+    console.log(post,idComment);
     post.comments = post.comments.filter((elem) => elem.id !== idComment);
     try {
       const { data } = await axiosRequest.patch(`posts/${idPost}`, post);
-      getPosts();
-    } catch (e) {}
-  };
-  const deletePost = async () => {
-    try {
-      const { data } = await axiosRequest.delete(`posts/${commentDialog}`);
       getPosts();
     } catch (e) {}
   };
@@ -145,30 +133,28 @@ const Profile = () => {
       setComment("");
     } catch (e) {}
   };
-  const follow = async (id)=>{
-    let user = users.find((user) => user.id===+getToken().sub)
-    let user1 = users.find((user) => user.id===id)
-    user.subscriptions.push(id)
-    user1.subscribers.push(+getToken().sub)
+  const follow = async (id) => {
+    let user = users.find((user) => user.id === +getToken().sub);
+    let user1 = users.find((user) => user.id === id);
+    if (user.subscriptions.includes(id)) {
+      user.subscriptions = user.subscriptions.filter((el) => el !== id);
+      user1.subscribers = user1.subscribers.filter((el) => el !== user.id);
+      setFoll(false)
+    } else {
+      user.subscriptions.push(id);
+      user1.subscribers.push(+getToken().sub);
+      setFoll(true)
+    }
     try {
       const { data } = await axiosRequest.patch(`users/${user.id}`, user);
-      const { data1 } = await axiosRequest.patch(`users/${id}`, user1);
+      const { data1 } = await axiosRequest.patch(`users/${user1.id}`, user1);
       getUsers();
+      
     } catch (e) {}
-  }
-  const unFollow = async (id,category)=>{
-    let user = users.find((user) => user.id===+getToken().sub)
-    let user1 = users.find((user) => user.id===id)
-    user[category] = user[category].filter((user)=>user!==id)
-    user1.subscribers = user1.subscribers.filter((user)=>user!==+getToken().sub)
-    try {
-      const { data } = await axiosRequest.patch(`users/${user.id}`, user);
-      const { data1 } = await axiosRequest.patch(`users/${id}`, user1);
-      getUsers();
-    } catch (e) {}
-  }
+  };
   useEffect(() => {
     getPosts();
+    // getUser();
     getUsers();
   }, []);
   return (
@@ -309,79 +295,23 @@ const Profile = () => {
               <h1 className="text-[#000] dark:text-[#FFF] text-[25px] sm:text-[20px]">
                 {user?.username}
               </h1>
-              <Link
-                to={"/account/edit"}
-                className="w-auto px-[10px] py-[5px] sm1:order-3  rounded-[10px] bg-[#f0f0f0] dark:bg-[#363636] text-[#000] dark:text-[#F5F5F5] font-[600] text-center leading-[15px] md:px-[5px]"
+
+              <button
+                onClick={() => follow(user.id)}
+                style={
+                  users
+                    ?.find((user) => user.id == +getToken().sub)
+                    .subscriptions.includes(user.id)
+                    ? {}
+                    : { backgroundColor: "#0095F6" }
+                }
+                className="w-auto px-[15px] py-[8px] sm1:order-3  rounded-[10px] bg-[#f0f0f0] dark:bg-[#363636] text-[#000] dark:text-[#F5F5F5] font-[600] text-center leading-[15px] md:px-[5px]"
               >
-                Редактировать <br /> профиль
-              </Link>
-              <button onClick={handleClickOpen}>
-                <div className="flex items-center justify-center">
-                  <div>
-                    <div className="hidden dark:block">
-                      <svg
-                        aria-label="Параметры"
-                        class="x1lliihq x1n2onr6"
-                        color="rgb(245, 245, 245)"
-                        fill="rgb(245, 245, 245)"
-                        height="24"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="24"
-                      >
-                        <title>Параметры</title>
-                        <circle
-                          cx="12"
-                          cy="12"
-                          fill="none"
-                          r="8.635"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        ></circle>
-                        <path
-                          d="M14.232 3.656a1.269 1.269 0 0 1-.796-.66L12.93 2h-1.86l-.505.996a1.269 1.269 0 0 1-.796.66m-.001 16.688a1.269 1.269 0 0 1 .796.66l.505.996h1.862l.505-.996a1.269 1.269 0 0 1 .796-.66M3.656 9.768a1.269 1.269 0 0 1-.66.796L2 11.07v1.862l.996.505a1.269 1.269 0 0 1 .66.796m16.688-.001a1.269 1.269 0 0 1 .66-.796L22 12.93v-1.86l-.996-.505a1.269 1.269 0 0 1-.66-.796M7.678 4.522a1.269 1.269 0 0 1-1.03.096l-1.06-.348L4.27 5.587l.348 1.062a1.269 1.269 0 0 1-.096 1.03m11.8 11.799a1.269 1.269 0 0 1 1.03-.096l1.06.348 1.318-1.317-.348-1.062a1.269 1.269 0 0 1 .096-1.03m-14.956.001a1.269 1.269 0 0 1 .096 1.03l-.348 1.06 1.317 1.318 1.062-.348a1.269 1.269 0 0 1 1.03.096m11.799-11.8a1.269 1.269 0 0 1-.096-1.03l.348-1.06-1.317-1.318-1.062.348a1.269 1.269 0 0 1-1.03-.096"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div className="dark:hidden">
-                      <svg
-                        aria-label="Параметры"
-                        class="x1lliihq x1n2onr6"
-                        color="#000"
-                        fill="#000"
-                        height="24"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="24"
-                      >
-                        <title>Параметры</title>
-                        <circle
-                          cx="12"
-                          cy="12"
-                          fill="none"
-                          r="8.635"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        ></circle>
-                        <path
-                          d="M14.232 3.656a1.269 1.269 0 0 1-.796-.66L12.93 2h-1.86l-.505.996a1.269 1.269 0 0 1-.796.66m-.001 16.688a1.269 1.269 0 0 1 .796.66l.505.996h1.862l.505-.996a1.269 1.269 0 0 1 .796-.66M3.656 9.768a1.269 1.269 0 0 1-.66.796L2 11.07v1.862l.996.505a1.269 1.269 0 0 1 .66.796m16.688-.001a1.269 1.269 0 0 1 .66-.796L22 12.93v-1.86l-.996-.505a1.269 1.269 0 0 1-.66-.796M7.678 4.522a1.269 1.269 0 0 1-1.03.096l-1.06-.348L4.27 5.587l.348 1.062a1.269 1.269 0 0 1-.096 1.03m11.8 11.799a1.269 1.269 0 0 1 1.03-.096l1.06.348 1.318-1.317-.348-1.062a1.269 1.269 0 0 1 .096-1.03m-14.956.001a1.269 1.269 0 0 1 .096 1.03l-.348 1.06 1.317 1.318 1.062-.348a1.269 1.269 0 0 1 1.03.096m11.799-11.8a1.269 1.269 0 0 1-.096-1.03l.348-1.06-1.317-1.318-1.062.348a1.269 1.269 0 0 1-1.03-.096"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                {users
+                  ?.find((user) => user.id == +getToken().sub)
+                  .subscriptions.includes(user.id)
+                  ? "Подписки"
+                  : "Подписаться"}
               </button>
             </div>
             <div className="flex items-center justify-start gap-x-[30px] text-[#000] dark:text-[#FFF] py-[15px] md:hidden">
@@ -417,7 +347,7 @@ const Profile = () => {
               </h1>
               <p className="text-[#000] dark:text-[#FFF] text-[12px] font-[400]">
                 <pre style={{ fontStyle: "normal" }} className="leading-4">
-                  <span className="text-[14px]">{user?.about}</span>
+                  <p className="text-[14px]">{user?.about}</p>
                 </pre>
               </p>
             </div>
@@ -439,17 +369,11 @@ const Profile = () => {
               <h1 className="text-center flex flex-col sm:text-[13px]">
                 <span className="font-[600]"> {posts.length}</span> публикаций
               </h1>
-              <h1 onClick={() => {
-                  setViewFollowers(true);
-                  setFollowers("subscribers");
-                }} className="text-center flex flex-col sm:text-[13px]">
+              <h1 className="text-center flex flex-col sm:text-[13px]">
                 <span className="font-[600]"> {user?.subscribers?.length}</span>{" "}
                 подписчиков
               </h1>
-              <h1 onClick={() => {
-                  setViewFollowers(true);
-                  setFollowers("subscriptions");
-                }} className="text-center flex flex-col sm:text-[13px]">
+              <h1 className="text-center flex flex-col sm:text-[13px]">
                 <span className="font-[600]">
                   {" "}
                   {user?.subscriptions?.length}{" "}
@@ -608,7 +532,7 @@ const Profile = () => {
             {posts.length > 0 ? (
               <ImageList cols={3}>
                 {posts.map((item) => (
-                  <h1 key={item.id}>
+                  <h1>
                     {item.media.map((media) => (
                       <ImageListItem key={item.id}>
                         {media.type.split("/")[0] === "image" ? (
@@ -631,8 +555,6 @@ const Profile = () => {
                           onClick={() => {
                             setCommentShow(!commentShow);
                             setCommentDialog(item.id);
-                            setEditPost(item);
-                            setTitle(item.title);
                           }}
                           className="cursor-pointer opacity-0 hover:opacity-[1] transition-opacity w-full h-full absolute bg-[#00000068] flex items-center justify-center"
                         >
@@ -686,7 +608,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div>
+      {/* <div>
         <Dialog
           open={open}
           onClose={handleClose}
@@ -746,7 +668,7 @@ const Profile = () => {
             </ul>
           </DialogContent>
         </Dialog>
-      </div>
+      </div> */}
       <div>
         <Dialog
           open={modalPost}
@@ -763,45 +685,36 @@ const Profile = () => {
           >
             <ul className="flex flex-col bg-[#FFF] dark:bg-[#2f2f2f]">
               <div
-                onClick={() => {
-                  deletePost();
-                  setModalPost(false);
-                  setCommentShow(false);
-                }}
-                className="cursor-pointer py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#ED4956] text-[13px]"
+                className="cursor-pointer py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#ED4956]  text-[14px]"
               >
-                Удалить
+                Пожаловаться
               </div>
-              <div
-                onClick={() => {
-                  setOpen3(true);
-                  setModalPost(false);
-                }}
-                className="cursor-pointer py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]"
-              >
-                Редактировать
+              {foll && 
+              (
+                <div onClick={()=>follow(user.id)}  className="cursor-pointer py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#ED4956] text-[14px]">
+              Отменить подписку
               </div>
-              <Link className="py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
-                Скрывать число отметок "Нравится"
+                )
+              }
+              
+              <Link className="py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[14px]">
+              Перейти к публикации
               </Link>
-              <Link className="py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
-                Выключить комментарии
+              <Link className="py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[14px]">
+              Поделиться…
               </Link>
-              <Link className="py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
-                Поделиться…
-              </Link>
-              <Link className="py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
+              <Link className="py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[14px]">
                 Копировать ссылку
               </Link>
-              <Link className="py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
+              <Link className="py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[14px]">
                 Вставить на сайт
               </Link>
-              <Link className="py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]">
+              <Link className="py-[14px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[14px]">
                 Информация об аккаунте
               </Link>
               <button
                 onClick={() => setModalPost(false)}
-                className="py-[12px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[13px]"
+                className="py-[12px] font-[600] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#FFF] text-[14px]"
               >
                 Отмена
               </button>
@@ -1030,7 +943,6 @@ const Profile = () => {
         open={commentShow}
         onClose={() => {
           setCommentShow(false);
-          setTitle("");
         }}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -1045,7 +957,6 @@ const Profile = () => {
           <button
             onClick={() => {
               setCommentShow(false);
-              setTitle("");
             }}
             className="fixed z-50 top-[20px] text-[#FFF] right-[20px]"
           >
@@ -1322,6 +1233,7 @@ const Profile = () => {
                                         setCommentIdDel({
                                           idComment: comment.id,
                                           postId: post.id,
+                                          id:comment.userId
                                         });
                                       }}
                                       className="dopol"
@@ -1686,7 +1598,7 @@ const Profile = () => {
                                 ? { display: "inline-block" }
                                 : { display: "none" }
                             }
-                            className="text-[#0095F6] font-[600] flex items-center pr-[15px]"
+                            className="text-[#0095F6] font-[600] flex pr-[20px]"
                           >
                             Опубликовать
                           </button>
@@ -1716,15 +1628,17 @@ const Profile = () => {
             <Link className="py-[14px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#eD4956] text-[13px] font-[700]">
               Пожаловаться
             </Link>
-            <button
-              className="py-[12px] border-b border-[#d3d3d3] dark:border-[#414141] text-center font-[700] text-[#eD4956] text-[13px]"
-              onClick={() => {
-                deleteComment(commentIdDel.postId, commentIdDel.idComment);
-                setCommentDel(false);
-              }}
-            >
-              Удалить
-            </button>
+            {commentIdDel?.id == +getToken().sub ? (
+              <button
+                className="py-[12px] border-b border-[#d3d3d3] dark:border-[#414141] text-center font-[700] text-[#eD4956] text-[13px]"
+                onClick={() => {
+                  deleteComment(commentIdDel.postId, commentIdDel.idComment);
+                  setCommentDel(false);
+                }}
+              >
+                Удалить
+              </button>
+            ) : null}
             <button
               onClick={() => setCommentDel(false)}
               className="py-[12px] border-b border-[#d3d3d3] dark:border-[#414141] text-center text-[#000] dark:text-[#fff] text-[13px]"
@@ -1734,113 +1648,6 @@ const Profile = () => {
           </ul>
         </DialogContent>
       </Dialog>
-      <div>
-        <Dialog
-          open={open3}
-          onClose={handleClose4}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-          maxWidth="md"
-        >
-          <DialogContent
-            sx={{
-              padding: 0,
-              backgroundColor: "#2f2f2f",
-            }}
-            className=""
-          >
-            <div className="flex items-center justify-between py-[10px] px-[15px] border-b dark:border-[#424141] border-[#d3d3d3] dark:bg-[#2f2f2f] bg-[#FFF]">
-              <div
-                className="cursor-pointer"
-                onClick={() => {
-                  handleClose4();
-                }}
-              >
-                <div className="flex items-center justify-center">
-                  <div>
-                    <h1 className="text-[#000] dark:text-[#FFF] font-[600] dark:font-[500]  sm:text-[10px]">
-                      Отмена
-                    </h1>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h1 className="text-[#000] dark:text-[#FFF] font-[600] dark:font-[500]  sm:text-[10px]">
-                  Редактирование информации
-                </h1>
-              </div>
-              <div>
-                <button
-                  onClick={() => {
-                    ditPost();
-                    setOpen3(false);
-                  }}
-                  className="text-[#0095F6] font-[600]"
-                >
-                  Готово
-                </button>
-              </div>
-            </div>
-            <div className="flex items-start justify-center w-full md:flex-col bg-[#FFF] dark:bg-[#2f2f2f]">
-              <div className="w-[500px] h-[500px] relative flex items-center justify-center md:w-[300px] md:h-[300px] sm1:w-full sm1:h-full">
-                <Swiper
-                  pagination={{
-                    type: "fraction",
-                  }}
-                  // navigation={true}
-                  // modules={[Pagination, Navigation]}
-                  className="mySwiper"
-                >
-                  {editPost?.media.map((e) => {
-                    return (
-                      <SwiperSlide key={e}>
-                        {e.type.split("/")[0] == "image" ? (
-                          <img
-                            src={`${import.meta.env.VITE_APP_FILES_URL}${
-                              e.src
-                            }`}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <video
-                            src={`${import.meta.env.VITE_APP_FILES_URL}${
-                              e.src
-                            }`}
-                            muted
-                            controls
-                            className=""
-                          ></video>
-                        )}
-                      </SwiperSlide>
-                    );
-                  })}
-                </Swiper>
-              </div>
-              <div className="px-[15px] py-[20px] w-[300px] md:w-full">
-                <Stack direction="row" spacing={1}>
-                  <Avatar
-                    src={`${import.meta.env.VITE_APP_FILES_URL}${user?.avatar}`}
-                    sx={{ width: 30, height: 30 }}
-                  />
-                  <h1 className="text-[#000] dark:text-[#FFF] font-[600]">
-                    {user?.username}
-                  </h1>
-                </Stack>
-                <div className="py-[15px] w-full">
-                  <textarea
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="w-full h-[200px] sm:h-[100px] bg-transparent text-[#000] dark:text-[#FFF] outline-none"
-                    placeholder="Добавьте подпись…"
-                  ></textarea>
-                  <div className="flex items-center justify-between"></div>
-                </div>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-
       <Dialog
         open={viewFollowers}
         onClose={() => setViewFollowers(false)}
@@ -1859,7 +1666,10 @@ const Profile = () => {
                 {followers == "subscribers" ? "Подписчики" : "Ваши подписки"}
               </div>
               <div className="absolute right-[10px]">
-                <CloseIcon className="dark:text-[#F5F5F5] cursor-pointer" onClick={()=>setViewFollowers(false)}/>
+                <CloseIcon
+                  className="dark:text-[#F5F5F5] cursor-pointer"
+                  onClick={() => setViewFollowers(false)}
+                />
               </div>
             </div>
             <div className="w-full h-[50vh] overflow-y-auto px-[15px] py-[10px]">
@@ -1868,34 +1678,48 @@ const Profile = () => {
                   return (
                     <div className="flex items-center justify-between my-[10px]">
                       <div className="flex">
-                      <Stack direction="row" spacing={1}>
-                        <Avatar
-                          src={`${import.meta.env.VITE_APP_FILES_URL}${
-                            users?.find((user) => user.id === subs)?.avatar
-                          }`}
-                          sx={{ width: 40, height: 40 }}
-                        />
-                      </Stack>
-                      <div className="ml-[15px]">
-                      <h1 className="dark:text-[#F5F5F5] font-[600] flex  gap-x-[15px]">
-                        <span>
-                        {users?.find((user) => user.id === subs)?.username}
-                        </span>
-                        {user.subscriptions?.find((user) => user === subs)?null:
-                        <button onClick={()=>follow(subs)} className="text-[12px] text-[#0095F6] hover:text-[#a2bed1]">Подписаться</button>
-                        }
-                    </h1>
-                    <h1 className="dark:text-[#A8A8A8]">
-                        {users?.find((user) => user.id === subs)?.name}
-                    </h1>
+                        <Stack direction="row" spacing={1}>
+                          <Avatar
+                            src={`${import.meta.env.VITE_APP_FILES_URL}${
+                              users?.find((user) => user.id === subs)?.avatar
+                            }`}
+                            sx={{ width: 40, height: 40 }}
+                          />
+                        </Stack>
+                        <div className="ml-[15px]">
+                          <h1 className="dark:text-[#F5F5F5] font-[600] flex  gap-x-[15px]">
+                            <div className="cursor-pointer">
+                              {
+                                users?.find((user) => user.id === subs)
+                                  ?.username
+                              }
+                            </div>
+                          </h1>
+                          <h1 className="dark:text-[#A8A8A8]">
+                            {users?.find((user) => user.id === subs)?.name}
+                          </h1>
+                        </div>
                       </div>
-                      </div>
-                      <div>
-                        {followers=="subscribers"?
-                        <button onClick={()=>unFollow(subs,"subscribers")} className="px-[15px] py-[5px] dark:bg-[#555555B3] bg-[#ececec] rounded-[10px] dark:text-[#F5F5F5] font-[600]">Удалить</button>:
-                        <button onClick={()=>unFollow(subs,"subscriptions")} className="px-[15px] py-[5px] dark:bg-[#555555B3] bg-[#ececec] rounded-[10px] dark:text-[#F5F5F5] font-[600]">{user.subscriptions?.find((user) => user === subs)?"Подписки":"Подписаться"}</button>
+                      {subs!==+getToken().sub&&
+                       <button
+                       onClick={() => follow(subs)}
+                       style={
+                         users
+                           ?.find((user) => user.id == +getToken().sub)
+                           .subscriptions.includes(subs)
+                           ? {}
+                           : { backgroundColor: "#0095F6"}
+                       }
+                       className="hover:bg-red-500 w-auto px-[15px] py-[8px] sm1:order-3  rounded-[10px]  dark:bg-[#363636] text-[#000] dark:text-[#F5F5F5] font-[600] text-center leading-[15px] md:px-[5px]"
+                     >
+                       {users
+                         ?.find((user) => user.id == +getToken().sub)
+                         .subscriptions.includes(subs)
+                         ? "Подписки"
+                         : "Подписаться"}
+                     </button>
                       }
-                      </div>
+                      
                     </div>
                   );
                 })}
@@ -1907,4 +1731,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ViewProfile;

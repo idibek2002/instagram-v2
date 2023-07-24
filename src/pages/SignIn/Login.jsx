@@ -5,20 +5,22 @@ import { Link, useNavigate } from "react-router-dom";
 import { axiosLogin, saveToken } from "../../utils/AxiosRequest";
 const Login = () => {
   const navigate = useNavigate()
-  const onSubmit=async (event)=>{
-    event.preventDefault();
-    let user ={
-      email:event.target["username"].value,
-      password:event.target["password"].value
-    }
-    try{
-      const {data} = await axiosLogin.post(`login`, user)
-      saveToken(data.accessToken, true)
-      navigate("/")
-    }catch(error){
-      console.log(error);
-    }
-  }
+
+  const login = async (e) => {
+    e.preventDefault();
+    let user = {
+      email: e.target["email"].value,
+      password: e.target["password"].value,
+    };
+    try {
+      const { data } = await axiosLogin.post(`login`, user);
+      console.log(data);
+      saveToken(data.accessToken, true);
+      navigate("/");
+    } catch (e) {
+      console.log(e);
+      }
+  };
   return (
     <div className="bg-[#FFF] w-full flex items-center justify-center pt-[30px]">
     <span>
@@ -74,14 +76,14 @@ const Login = () => {
             </h1>
                 </div>
                 <div className="form-wrap">
-                  <form onSubmit={(event)=>onSubmit(event)} className="form">
+                  <form onSubmit={(event)=>login(event)} className="form">
 
                     <div className="input-box">
-                      <input type="text" id="name" placeholder="Телефон, имя пользователя или эл. адрес" aria-required="true" name="username" required/>
+                      <input type="text" id="name" placeholder="Телефон, имя пользователя или эл. адрес" aria-required="true" name="email" required/>
                     </div>  
 
                     <div className="input-box">
-                      <input type="password" name="password" id="password" placeholder="Пароль" required/>
+                      <input type="text" name="password" id="password" placeholder="Пароль" required/>
                     </div>  
 
                     <span className="button-box">

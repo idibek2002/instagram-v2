@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Layout.css";
 import { Link, Outlet } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import Switcher from "../components/Switcher/Switcher";
 import Avatar from "@mui/material/Avatar";
 import person from "../assets/profile.jpg";
@@ -17,16 +16,13 @@ import MenuList from "@mui/material/MenuList";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import { axiosRequest, destroyToken, getToken } from "../utils/AxiosRequest";
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from "swiper/react";
 import { multiFiles } from "../api/files";
 
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-
-
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 const Layout = () => {
- 
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -37,17 +33,23 @@ const Layout = () => {
   const [input, setInput] = useState([]);
   const [title, setTitle] = useState("");
   const [files, setFiles] = React.useState(null);
-  console.log(files);
+  const [users, setUsers] = useState([]);
+  const [menuBar, setMenuBar] = useState(false);
 
-  function _treat(e) {
+  const _treat = (e) => {
     const { files } = e.target;
     let images = [];
     const selecteds = [...[...files]];
 
-    selecteds.forEach((i) => images.push(URL.createObjectURL(i)));
-
+    selecteds.forEach((elem) =>
+      images.push({
+        src: URL.createObjectURL(elem),
+        type: elem.type,
+      })
+    );
     setInput(images);
-  }
+  };
+
   const addPost = async () => {
     if (!files) return alert("Please select photo");
     let post = {
@@ -55,9 +57,12 @@ const Layout = () => {
       date: Date.now(),
       likes: 0,
       likedBy: [],
+      saved: 0,
+      savedBy: [],
       comments: [],
       media: [],
       userId: +getToken().sub,
+      more:false
     };
 
     let formData = new FormData();
@@ -79,16 +84,19 @@ const Layout = () => {
 
     try {
       const { data } = await axiosRequest.post(`posts`, post);
-      setOpen3(false)
     } catch (err) {}
   };
-
-  const handleClickOpenSearch = () => {
-    setsearchModal(true);
+  const getUsers = async () => {
+    try {
+      const { data } = await axiosRequest.get("users");
+      setUsers(data);
+    } catch (e) {
+      console.log(e);
+    }
   };
-  const handleClickCloseSearch = () => {
-    setsearchModal(false);
-  };
+  useEffect(() => {
+    getUsers();
+  }, []);
   const handleClickOpen = () => {
     setOpen2(true);
   };
@@ -134,17 +142,14 @@ const Layout = () => {
     }
   }
 
-  const { t, i18n } = useTranslation();
-  const changeLanguages = (Language) => {
-    i18n.changeLanguage(Language);
-  };
-  const location = useLocation(); 
+  
+  const location = useLocation();
   return (
     <>
       <div className="flex bg-[#fff] dark:bg-[#000] w-full">
-        <div className="appBar w-[245px] app:w-[70px] md:hidden fixed z-40 top-0 left-0 h-screen border-r dark:border-[#2b2b2b] border-[#d3d3d3] bg-[#fff] dark:bg-[#000] py-[15px] px-[10px]">
+        <div style={menuBar?{width:"70px"}:{}} className="appBar w-[245px] app:w-[70px] md:hidden fixed z-40 top-0 left-0 h-screen border-r dark:border-[#2b2b2b] border-[#d3d3d3] bg-[#fff] dark:bg-[#000] py-[15px] px-[10px]">
           <div className="logo flex items-center justify-start h-[73px] px-[15px] py-[20px]">
-            <h1 className="hidden app:block">
+            <h1 style={menuBar?{display:"block"}:{}} className="hidden app:block">
               <div className="hidden dark:block">
                 <svg
                   aria-label="Instagram"
@@ -174,7 +179,7 @@ const Layout = () => {
                 </svg>
               </div>
             </h1>
-            <h1 className="text-[#000] dark:text-[#FFF] text-[25px] app:hidden">
+            <h1 style={menuBar?{display:"none"}:{}} className="text-[#000] dark:text-[#FFF] text-[25px] app:hidden">
               <div className="dark:hidden">
                 <svg
                   aria-label="Instagram"
@@ -219,6 +224,7 @@ const Layout = () => {
           <div className="pt-[20px] flex flex-col justify-between h-[90%] bg-[#fff] dark:bg-[#000]">
             <ul className="flex flex-col gap-y-[5px]">
               <Link
+              onClick={()=>setMenuBar(false)}
                 to={"/"}
                 className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer"
               >
@@ -312,20 +318,26 @@ const Layout = () => {
                   )}
                 </div>
                 <div className="hidden">
-                <Switcher/>
+                  <Switcher />
                 </div>
+                {menuBar==true?"":
                 <h1
-                  className="text-[15px] font-[600] text-[#000] dark:text-[#F5F5F5] app:hidden"
-                  style={
-                    location.pathname == "/"
-                      ? { fontWeight: "600" }
-                      : { fontWeight: "500" }
-                  }
-                >
-                  Главная
-                </h1>
+                className="text-[15px] font-[600] text-[#000] dark:text-[#F5F5F5] app:hidden"
+                style={
+                  location.pathname == "/"
+                    ? { fontWeight: "600" }
+                    : { fontWeight: "500" }
+                }
+              >
+                Главная
+              </h1>
+                }
+                
               </Link>
-              <div onClick={()=>setsearchModal(!searchModal)} className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
+              <div
+              onClick={()=>setMenuBar(false)}
+                className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer"
+              >
                 <div className="flex items-center justify-center">
                   <div>
                     <div className="hidden dark:block">
@@ -393,11 +405,17 @@ const Layout = () => {
                     </div>
                   </div>
                 </div>
+                {menuBar==true?"":
                 <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden">
                   Поисковый запрос
                 </h1>
+                }
               </div>
-              <Link to={"/interesting"} className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
+              <Link
+              onClick={()=>setMenuBar(false)}
+                to={"/interesting"}
+                className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer"
+              >
                 <div className="flex items-center justify-center">
                   <div>
                     <div className="hidden dark:block">
@@ -472,253 +490,268 @@ const Layout = () => {
                     </div>
                   </div>
                 </div>
+                {menuBar==true?"":
                 <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden">
                   Интересное
                 </h1>
+                }
               </Link>
-              <Link to={"/reels"} className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
-              <div className="flex items-center justify-center">
+              <Link
+                to={"/reels"}
+                onClick={()=>setMenuBar(false)}
+                className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer"
+              >
+                <div className="flex items-center justify-center">
                   {location.pathname == "/reels" ? (
                     <div>
-                       <div className="hidden dark:block">
-                      <svg
-                        aria-label="Reels"
-                        class="_ab6-"
-                        color="rgb(245, 245, 245)"
-                        fill="rgb(245, 245, 245)"
-                        height="24"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="24"
-                      >
-                        <line
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="2.049"
-                          x2="21.95"
-                          y1="7.002"
-                          y2="7.002"
-                        ></line>
-                        <line
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="13.504"
-                          x2="16.362"
-                          y1="2.001"
-                          y2="7.002"
-                        ></line>
-                        <line
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="7.207"
-                          x2="10.002"
-                          y1="2.11"
-                          y2="7.002"
-                        ></line>
-                        <path
-                          d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        ></path>
-                        <path
-                          d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
-                          fill-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div className="dark:hidden">
-                      <svg
-                        aria-label="Reels"
-                        class="_ab6-"
-                        color="#000"
-                        fill="#000"
-                        height="24"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="24"
-                      >
-                        <line
+                      <div className="hidden dark:block">
+                        <svg
+                          aria-label="Reels"
+                          class="_ab6-"
+                          color="rgb(245, 245, 245)"
+                          fill="rgb(245, 245, 245)"
+                          height="24"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="2.049"
+                            x2="21.95"
+                            y1="7.002"
+                            y2="7.002"
+                          ></line>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="13.504"
+                            x2="16.362"
+                            y1="2.001"
+                            y2="7.002"
+                          ></line>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="7.207"
+                            x2="10.002"
+                            y1="2.11"
+                            y2="7.002"
+                          ></line>
+                          <path
+                            d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                          ></path>
+                          <path
+                            d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
+                            fill-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                      <div className="dark:hidden">
+                        <svg
+                          aria-label="Reels"
+                          class="_ab6-"
+                          color="#000"
                           fill="#000"
-                          stroke="currentColor"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="2.049"
-                          x2="21.95"
-                          y1="7.002"
-                          y2="7.002"
-                        ></line>
-                        <line
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="13.504"
-                          x2="16.362"
-                          y1="2.001"
-                          y2="7.002"
-                        ></line>
-                        <line
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="7.207"
-                          x2="10.002"
-                          y1="2.11"
-                          y2="7.002"
-                        ></line>
-                        <path
-                          d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        ></path>
-                        <path
-                          d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
-                          fill-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
+                          height="24"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <line
+                            fill="#000"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="2.049"
+                            x2="21.95"
+                            y1="7.002"
+                            y2="7.002"
+                          ></line>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="13.504"
+                            x2="16.362"
+                            y1="2.001"
+                            y2="7.002"
+                          ></line>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="7.207"
+                            x2="10.002"
+                            y1="2.11"
+                            y2="7.002"
+                          ></line>
+                          <path
+                            d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                          ></path>
+                          <path
+                            d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
+                            fill-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
                     </div>
                   ) : (
                     <div>
                       <div className="hidden dark:block">
-                      <svg
-                        aria-label="Reels"
-                        class="_ab6-"
-                        color="rgb(245, 245, 245)"
-                        fill="rgb(245, 245, 245)"
-                        height="24"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="24"
-                      >
-                        <line
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="2.049"
-                          x2="21.95"
-                          y1="7.002"
-                          y2="7.002"
-                        ></line>
-                        <line
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="13.504"
-                          x2="16.362"
-                          y1="2.001"
-                          y2="7.002"
-                        ></line>
-                        <line
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="7.207"
-                          x2="10.002"
-                          y1="2.11"
-                          y2="7.002"
-                        ></line>
-                        <path
-                          d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        ></path>
-                        <path
-                          d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
-                          fill-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div className="dark:hidden">
-                      <svg
-                        aria-label="Reels"
-                        class="_ab6-"
-                        color="#000"
-                        fill="#000"
-                        height="24"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="24"
-                      >
-                        <line
+                        <svg
+                          aria-label="Reels"
+                          class="_ab6-"
+                          color="rgb(245, 245, 245)"
+                          fill="rgb(245, 245, 245)"
+                          height="24"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="2.049"
+                            x2="21.95"
+                            y1="7.002"
+                            y2="7.002"
+                          ></line>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="13.504"
+                            x2="16.362"
+                            y1="2.001"
+                            y2="7.002"
+                          ></line>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="7.207"
+                            x2="10.002"
+                            y1="2.11"
+                            y2="7.002"
+                          ></line>
+                          <path
+                            d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                          ></path>
+                          <path
+                            d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
+                            fill-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                      <div className="dark:hidden">
+                        <svg
+                          aria-label="Reels"
+                          class="_ab6-"
+                          color="#000"
                           fill="#000"
-                          stroke="currentColor"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="2.049"
-                          x2="21.95"
-                          y1="7.002"
-                          y2="7.002"
-                        ></line>
-                        <line
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="13.504"
-                          x2="16.362"
-                          y1="2.001"
-                          y2="7.002"
-                        ></line>
-                        <line
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          x1="7.207"
-                          x2="10.002"
-                          y1="2.11"
-                          y2="7.002"
-                        ></line>
-                        <path
-                          d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        ></path>
-                        <path
-                          d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
-                          fill-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
+                          height="24"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <line
+                            fill="#000"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="2.049"
+                            x2="21.95"
+                            y1="7.002"
+                            y2="7.002"
+                          ></line>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="13.504"
+                            x2="16.362"
+                            y1="2.001"
+                            y2="7.002"
+                          ></line>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            x1="7.207"
+                            x2="10.002"
+                            y1="2.11"
+                            y2="7.002"
+                          ></line>
+                          <path
+                            d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                          ></path>
+                          <path
+                            d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
+                            fill-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
                     </div>
                   )}
                 </div>
-                <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden" style={location.pathname=="/reels"?{fontWeight:"700"}:{fontWeight:"500"}}>
+                {menuBar==true?"":
+                <h1
+                className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden"
+                style={
+                  location.pathname == "/reels"
+                  ? { fontWeight: "700" }
+                  : { fontWeight: "500" }
+                }
+                >
                   Reels
                 </h1>
+                }
               </Link>
-              <Link className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
+              <Link to={"/messages"} onClick={()=>setMenuBar(true)} className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
                 <div className="flex items-center justify-center">
                   <div>
                     <div className="hidden dark:block">
@@ -771,11 +804,13 @@ const Layout = () => {
                     </div>
                   </div>
                 </div>
+                {menuBar==true?"":
                 <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden">
                   Сообщения
                 </h1>
+                }
               </Link>
-              <Link className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
+              <Link onClick={()=>setMenuBar(false)} className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
                 <div className="flex items-center justify-center">
                   <div>
                     <div className="hidden dark:block">
@@ -810,12 +845,15 @@ const Layout = () => {
                     </div>
                   </div>
                 </div>
+                {menuBar==true?"":
                 <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden">
                   Уведомления
                 </h1>
+                }
               </Link>
               <button
-                onClick={handleClickOpen}
+                onClick={()=>{handleClickOpen()
+                  setMenuBar(false)}}
                 className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer"
               >
                 <div className="flex items-center justify-center">
@@ -908,11 +946,14 @@ const Layout = () => {
                     </div>
                   </div>
                 </div>
+                {menuBar==true?"":
                 <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden">
                   Создать
                 </h1>
+                }
               </button>
               <Link
+              onClick={()=>setMenuBar(false)}
                 to={"account"}
                 className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer"
               >
@@ -925,23 +966,29 @@ const Layout = () => {
                         : null
                     }
                   >
-                    <Stack direction="row" spacing={2}>
-                      <Avatar sx={{ width: "24px", height: "24px" }}>
-                        <img src={person} alt="" />
-                      </Avatar>
+                    <Stack direction="row" spacing={1}>
+                      <Avatar
+                        src={`${import.meta.env.VITE_APP_FILES_URL}${
+                          users.find((user) => user.id === +getToken().sub)
+                            ?.avatar
+                        }`}
+                        sx={{ width: 24, height: 24 }}
+                      />
                     </Stack>
                   </div>
                 </div>
+                {menuBar==true?"":
                 <h1
-                  className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden"
-                  style={
-                    location.pathname == "/account"
-                      ? { fontWeight: "600" }
-                      : { fontWeight: "500" }
-                  }
+                className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden"
+                style={
+                  location.pathname == "/account"
+                  ? { fontWeight: "600" }
+                  : { fontWeight: "500" }
+                }
                 >
                   Профиль
                 </h1>
+                }
               </Link>
             </ul>
             <div>
@@ -1050,9 +1097,11 @@ const Layout = () => {
                     </div>
                   </div>
                 </div>
+                {menuBar==true?"":
                 <h1 className="text-[14px] font-[500] text-[#000] dark:text-[#F5F5F5] app:hidden">
                   Ещё
                 </h1>
+                }
               </div>
               <div className="flex items-center justify-center">
                 <Stack direction="row" spacing={2}>
@@ -1386,36 +1435,35 @@ const Layout = () => {
                                       }}
                                     >
                                       <div className="dark:hidden">
-                                      <svg
-                                        aria-label="Сообщение о проблеме"
-                                        class="x1lliihq x1n2onr6"
-                                        color="#000"
-                                        fill="#000"
-                                        height="20"
-                                        role="img"
-                                        viewBox="0 0 24 24"
-                                        width="20"
-                                      >
-                                        <title>Сообщение о проблеме</title>
-                                        <path d="M18.001 1h-12a5.006 5.006 0 0 0-5 5v9.005a5.006 5.006 0 0 0 5 5h2.514l2.789 2.712a1 1 0 0 0 1.394 0l2.787-2.712h2.516a5.006 5.006 0 0 0 5-5V6a5.006 5.006 0 0 0-5-5Zm3 14.005a3.003 3.003 0 0 1-3 3h-2.936a1 1 0 0 0-.79.387l-2.274 2.212-2.276-2.212a1 1 0 0 0-.79-.387H6a3.003 3.003 0 0 1-3-3V6a3.003 3.003 0 0 1 3-3h12a3.003 3.003 0 0 1 3 3Zm-9-1.66a1.229 1.229 0 1 0 1.228 1.228A1.23 1.23 0 0 0 12 13.344Zm0-8.117a1.274 1.274 0 0 0-.933.396 1.108 1.108 0 0 0-.3.838l.347 4.861a.892.892 0 0 0 1.77 0l.348-4.86a1.106 1.106 0 0 0-.3-.838A1.272 1.272 0 0 0 12 5.228Z"></path>
-                                      </svg>
+                                        <svg
+                                          aria-label="Сообщение о проблеме"
+                                          class="x1lliihq x1n2onr6"
+                                          color="#000"
+                                          fill="#000"
+                                          height="20"
+                                          role="img"
+                                          viewBox="0 0 24 24"
+                                          width="20"
+                                        >
+                                          <title>Сообщение о проблеме</title>
+                                          <path d="M18.001 1h-12a5.006 5.006 0 0 0-5 5v9.005a5.006 5.006 0 0 0 5 5h2.514l2.789 2.712a1 1 0 0 0 1.394 0l2.787-2.712h2.516a5.006 5.006 0 0 0 5-5V6a5.006 5.006 0 0 0-5-5Zm3 14.005a3.003 3.003 0 0 1-3 3h-2.936a1 1 0 0 0-.79.387l-2.274 2.212-2.276-2.212a1 1 0 0 0-.79-.387H6a3.003 3.003 0 0 1-3-3V6a3.003 3.003 0 0 1 3-3h12a3.003 3.003 0 0 1 3 3Zm-9-1.66a1.229 1.229 0 1 0 1.228 1.228A1.23 1.23 0 0 0 12 13.344Zm0-8.117a1.274 1.274 0 0 0-.933.396 1.108 1.108 0 0 0-.3.838l.347 4.861a.892.892 0 0 0 1.77 0l.348-4.86a1.106 1.106 0 0 0-.3-.838A1.272 1.272 0 0 0 12 5.228Z"></path>
+                                        </svg>
                                       </div>
                                       <div className="hidden dark:block">
-                                      <svg
-                                        aria-label="Сообщение о проблеме"
-                                        class="x1lliihq x1n2onr6"
-                                        color="rgb(245,245,245)"
-                                        fill="rgb(245,245,245)"
-                                        height="20"
-                                        role="img"
-                                        viewBox="0 0 24 24"
-                                        width="20"
-                                      >
-                                        <title>Сообщение о проблеме</title>
-                                        <path d="M18.001 1h-12a5.006 5.006 0 0 0-5 5v9.005a5.006 5.006 0 0 0 5 5h2.514l2.789 2.712a1 1 0 0 0 1.394 0l2.787-2.712h2.516a5.006 5.006 0 0 0 5-5V6a5.006 5.006 0 0 0-5-5Zm3 14.005a3.003 3.003 0 0 1-3 3h-2.936a1 1 0 0 0-.79.387l-2.274 2.212-2.276-2.212a1 1 0 0 0-.79-.387H6a3.003 3.003 0 0 1-3-3V6a3.003 3.003 0 0 1 3-3h12a3.003 3.003 0 0 1 3 3Zm-9-1.66a1.229 1.229 0 1 0 1.228 1.228A1.23 1.23 0 0 0 12 13.344Zm0-8.117a1.274 1.274 0 0 0-.933.396 1.108 1.108 0 0 0-.3.838l.347 4.861a.892.892 0 0 0 1.77 0l.348-4.86a1.106 1.106 0 0 0-.3-.838A1.272 1.272 0 0 0 12 5.228Z"></path>
-                                      </svg>
+                                        <svg
+                                          aria-label="Сообщение о проблеме"
+                                          class="x1lliihq x1n2onr6"
+                                          color="rgb(245,245,245)"
+                                          fill="rgb(245,245,245)"
+                                          height="20"
+                                          role="img"
+                                          viewBox="0 0 24 24"
+                                          width="20"
+                                        >
+                                          <title>Сообщение о проблеме</title>
+                                          <path d="M18.001 1h-12a5.006 5.006 0 0 0-5 5v9.005a5.006 5.006 0 0 0 5 5h2.514l2.789 2.712a1 1 0 0 0 1.394 0l2.787-2.712h2.516a5.006 5.006 0 0 0 5-5V6a5.006 5.006 0 0 0-5-5Zm3 14.005a3.003 3.003 0 0 1-3 3h-2.936a1 1 0 0 0-.79.387l-2.274 2.212-2.276-2.212a1 1 0 0 0-.79-.387H6a3.003 3.003 0 0 1-3-3V6a3.003 3.003 0 0 1 3-3h12a3.003 3.003 0 0 1 3 3Zm-9-1.66a1.229 1.229 0 1 0 1.228 1.228A1.23 1.23 0 0 0 12 13.344Zm0-8.117a1.274 1.274 0 0 0-.933.396 1.108 1.108 0 0 0-.3.838l.347 4.861a.892.892 0 0 0 1.77 0l.348-4.86a1.106 1.106 0 0 0-.3-.838A1.272 1.272 0 0 0 12 5.228Z"></path>
+                                        </svg>
                                       </div>
-                                      
                                       Сообщение о проблеме
                                     </MenuItem>
                                   </div>
@@ -1435,7 +1483,7 @@ const Layout = () => {
                                   <div className="border-t border-[#5a5a5a] my-[12px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] text-[#000] dark:text-[#FFF]"></div>
                                   <div className="mx-[7px] px-[5px] rounded-[7px] py-[8px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] text-[#000] dark:text-[#FFF]">
                                     <div
-                                        onClick={destroyToken}
+                                      onClick={destroyToken}
                                       className="flex items-center px-[15px] py-[5px] font-[500] cursor-pointer"
                                       style={{
                                         fontSize: "14px",
@@ -1678,7 +1726,10 @@ const Layout = () => {
                   )}
                 </div>
               </Link>
-              <Link to={"/interesting"} className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
+              <Link
+                to={"/interesting"}
+                className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer"
+              >
                 <div className="flex items-center justify-center">
                   <div>
                     <div className="hidden dark:block">
@@ -1754,7 +1805,10 @@ const Layout = () => {
                   </div>
                 </div>
               </Link>
-              <Link className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
+              <Link
+                to={"/reels"}
+                className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer"
+              >
                 <div className="flex items-center justify-center">
                   <div>
                     <div className="hidden dark:block">
@@ -1874,7 +1928,10 @@ const Layout = () => {
                   </div>
                 </div>
               </Link>
-              <div onClick={handleClickOpen} className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer">
+              <div
+                onClick={handleClickOpen}
+                className="flex items-center gap-x-[15px] h-[50px] p-[12px] rounded-[10px] hover:bg-[#ebeaea] dark:hover:bg-[#1f1f1f] cursor-pointer"
+              >
                 <div className="flex items-center justify-center">
                   <div>
                     <div className="hidden dark:block">
@@ -2033,10 +2090,14 @@ const Layout = () => {
                         : null
                     }
                   >
-                    <Stack direction="row" spacing={2}>
-                      <Avatar sx={{ width: "24px", height: "24px" }}>
-                        <img src={person} alt="" />
-                      </Avatar>
+                    <Stack direction="row" spacing={1}>
+                      <Avatar
+                        src={`${import.meta.env.VITE_APP_FILES_URL}${
+                          users.find((user) => user.id === +getToken().sub)
+                            ?.avatar
+                        }`}
+                        sx={{ width: 24, height: 24 }}
+                      />
                     </Stack>
                   </div>
                 </div>
@@ -2045,10 +2106,10 @@ const Layout = () => {
           </div>
         </div>
         <div className="w-full relative flex flex-col justify-between">
-          <div className="bg-[#fff] dark:bg-[#000] ml-[10%] app:ml-0 md:pb-[30px]">
+          <div className="bg-[#fff] dark:bg-[#000] ml-[10%] md:ml-0  md:pb-[30px]">
             <Outlet />
           </div>
-          <footer className="w-full bg-[#fff] dark:bg-[#000] pl-[17%] md:pl-0 flex items-center px-[20px] pt-[20px] pb-[30px] md:hidden">
+          <footer className="w-full bg-[#fff] dark:bg-[#000] pl-[17%] app:pl-[10%] flex items-center px-[20px] pt-[20px] pb-[30px] md:hidden">
             <div className="w-full">
               <ul className="flex items-center justify-center flex-wrap gap-x-[15px] gap-y-[5px] text-center">
                 <Link className="dark:text-[#A8A8A8] text-[#000] hover:underline text-[12px] text-center">
@@ -2116,7 +2177,6 @@ const Layout = () => {
           onClose={handleClose3}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
-          
         >
           <DialogContent
             className="w-[500px] h-[540px] sm:w-[350px] sm:h-[400px] sm1:w-[270px]"
@@ -2212,7 +2272,7 @@ const Layout = () => {
                     onChange={(e) => {
                       handleClickOpen1();
                       handleClose3();
-                      _treat(e)
+                      _treat(e);
                       setFiles(e.target.files);
                     }}
                   />
@@ -2323,35 +2383,63 @@ const Layout = () => {
                 </h1>
               </div>
               <div>
-                <button onClick={addPost} className="text-[#0095F6] font-[600]">
+                <button
+                  onClick={() => {
+                    addPost();
+                    setOpen3(false);
+                    setTitle("");
+                  }}
+                  className="text-[#0095F6] font-[600]"
+                >
                   Поделиться
                 </button>
               </div>
             </div>
             <div className="flex items-start justify-center w-full md:flex-col bg-[#FFF] dark:bg-[#2f2f2f]">
               <div className="w-[500px] h-[500px] relative flex items-center justify-center md:w-[300px] md:h-[300px] sm1:w-full sm1:h-full">
-              <Swiper
-        pagination={{
-          type: 'fraction',
-        }}
-        // navigation={true}
-        // modules={[Pagination, Navigation]}
-        className="mySwiper"
-      >
-        {input.map((e)=>{
-                  return (
-                    <SwiperSlide key={e}>
-                      <img src={e} alt="" className="w-full h-full object-cover" />
-                    </SwiperSlide>
-                  )
-                })}
-      </Swiper>
-                
-            
-
+                <Swiper
+                  pagination={{
+                    type: "fraction",
+                  }}
+                  // navigation={true}
+                  // modules={[Pagination, Navigation]}
+                  className="mySwiper"
+                >
+                  {input.map((e) => {
+                    return (
+                      <SwiperSlide key={e}>
+                        {e.type.split("/")[0] == "image" ? (
+                          <img
+                            src={e.src}
+                            alt=""
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <video
+                            src={e.src}
+                            muted
+                            controls
+                            className=""
+                          ></video>
+                        )}
+                      </SwiperSlide>
+                    );
+                  })}
+                </Swiper>
               </div>
               <div className="px-[15px] py-[20px] w-[300px] md:w-full">
-                <Stack
+                <Stack direction="row" spacing={1}>
+                  <Avatar
+                    src={`${import.meta.env.VITE_APP_FILES_URL}${
+                      users.find((user) => user.id === +getToken().sub)?.avatar
+                    }`}
+                    sx={{ width: 30, height: 30 }}
+                  />
+                  <h1 className="text-[#000] dark:text-[#FFF] font-[600]">
+                    {users.find((user) => user.id === +getToken().sub)?.username}
+                  </h1>
+                </Stack>
+                {/* <Stack
                   direction="row"
                   spacing={2}
                   className="flex items-center"
@@ -2362,12 +2450,12 @@ const Layout = () => {
                   <h1 className="text-[#000] dark:text-[#FFF] font-[600]">
                     idibek_02
                   </h1>
-                </Stack>
+                </Stack> */}
                 <div className="py-[15px] w-full">
                   <textarea
-                  value={title}
-                  onChange={(e)=>setTitle(e.target.value)}
-                    className="w-full h-auto bg-transparent text-[#000] dark:text-[#FFF] outline-none"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full h-[200px] sm:h-[100px] bg-transparent text-[#000] dark:text-[#FFF] outline-none"
                     placeholder="Добавьте подпись…"
                   ></textarea>
                   <div className="flex items-center justify-between"></div>
