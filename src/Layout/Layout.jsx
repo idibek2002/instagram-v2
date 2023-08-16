@@ -27,7 +27,6 @@ const Layout = () => {
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);
-  const [searchModal, setsearchModal] = useState(false);
   const anchorRef = React.useRef(null);
   const anchorRef1 = React.useRef(null);
   const [input, setInput] = useState([]);

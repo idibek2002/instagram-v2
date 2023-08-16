@@ -1710,7 +1710,7 @@ const ViewProfile = () => {
                            ? {}
                            : { backgroundColor: "#0095F6"}
                        }
-                       className="hover:bg-red-500 w-auto px-[15px] py-[8px] sm1:order-3  rounded-[10px]  dark:bg-[#363636] text-[#000] dark:text-[#F5F5F5] font-[600] text-center leading-[15px] md:px-[5px]"
+                       className=" w-auto px-[15px] py-[8px] sm1:order-3  rounded-[10px]  dark:bg-[#363636] text-[#000] dark:text-[#F5F5F5] font-[600] text-center leading-[15px] md:px-[5px]"
                      >
                        {users
                          ?.find((user) => user.id == +getToken().sub)

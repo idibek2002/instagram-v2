@@ -77,13 +77,11 @@ const Login = () => {
                 </div>
                 <div className="form-wrap">
                   <form onSubmit={(event)=>login(event)} className="form">
-
                     <div className="input-box">
                       <input type="text" id="name" placeholder="Телефон, имя пользователя или эл. адрес" aria-required="true" name="email" required/>
                     </div>  
-
                     <div className="input-box">
-                      <input type="text" name="password" id="password" placeholder="Пароль" required/>
+                      <input type="password" name="password" id="password" placeholder="Пароль" required/>
                     </div>  
 
                     <span className="button-box">

@@ -3,17 +3,46 @@ import { Link} from "react-router-dom";
 import person from "../../assets/profile.jpg";
 import { useState } from "react";
 import { axiosRequest, getToken } from "../../utils/AxiosRequest";
+import LoadingButton from "../Edit/Component/LoadingButton";
 const ChangePassword = () => {
   const [user, setUser]=useState()
-  console.log(getToken());
+  const [newPassword, setNewPassword]= useState("")
+  const [newsPassword, setNewsPassword]= useState("")
+  const [error, setError]= useState(false)
+  const [loading, setLoading]= useState(false)
   const getUsers = async () => {
     try {
       const { data } = await axiosRequest.get("users");
-      setUser(data);
+      const user = data.find((user) => user.id === +getToken().sub);
+      setUser(user);
     } catch (e) {
       console.log(e);
     }
   };
+  const changePassword= async ()=>{
+    setLoading(true)
+    if(newPassword===newsPassword){
+      user.password=newPassword
+      try {
+        const { data } = await axiosRequest.patch(
+          `users/${user.id}`,
+          user
+        );
+        setError(false)
+        setLoading(false)
+        setNewPassword("")
+        setNewsPassword("")
+        getUsers();
+      } catch (e) {
+        setNewPassword("")
+        setNewsPassword("")
+       
+      }
+    }else {
+      setError(true)
+      setLoading(false)
+    }
+  }
   useEffect(()=>{
     getUsers()
   },[])
@@ -273,10 +302,10 @@ const ChangePassword = () => {
                   <img src={person} alt="" className="w-[42px] rounded-[50%]" />
                 </div>
                 <div className="w-[60%] md:w-full">
-                  <h1 className="text-[#000] dark:text-[#FFF]">idibek_02</h1>
+                  <h1 className="text-[#000] dark:text-[#FFF] font-[600]">{user?.username}</h1>
                 </div>
               </div>
-              <div className="flex gap-x-[30px] items-center md:flex-col md:items-start">
+              {/* <div className="flex gap-x-[30px] items-center md:flex-col md:items-start">
                 <div className="w-[20%] md:w-full">
                   <h1 className="text-[#000] dark:text-[#FFF] font-[600] text-end md:text-start md:py-[5px]">
                     Старый пароль
@@ -288,7 +317,7 @@ const ChangePassword = () => {
                     className="w-[100%] bg-transparent py-[8px] rounded-[8px] text-[#000]  dark:text-[#FFF] px-[10px] outline-none border border-[#dedede] dark:border-[#222]"
                   />
                 </div>
-              </div>
+              </div> */}
               <div className="flex gap-x-[30px] items-center md:flex-col md:items-start">
                 <div className="w-[20%] md:w-full">
                   <h1 className="text-[#000] dark:text-[#FFF] font-[600] text-end md:text-start md:py-[5px]">
@@ -297,7 +326,9 @@ const ChangePassword = () => {
                 </div>
                 <div className="w-[70%] md:w-full">
                   <input
+                   style={error?{borderColor:"red"}:{borderColor:"#222"}}
                     type="password"
+                    value={newPassword} onChange={(e)=>setNewPassword(e.target.value)}
                     className="w-[100%] bg-transparent py-[8px] rounded-[8px] text-[#000] dark:text-[#FFF] px-[10px] outline-none  border  border-[#dedede] dark:border-[#222]"
                   />
                 </div>
@@ -310,7 +341,9 @@ const ChangePassword = () => {
                 </div>
                 <div className="w-[70%] md:w-full">
                   <input
+                  style={error?{borderColor:"red"}:{borderColor:"#222"}}
                     type="password"
+                    value={newsPassword} onChange={(e)=>setNewsPassword(e.target.value)}
                     className="w-[100%] bg-transparent py-[8px] rounded-[8px] text-[#000] dark:text-[#FFF] px-[10px] outline-none  border border-[#dedede] dark:border-[#222]"
                   />
                 </div>
@@ -320,8 +353,10 @@ const ChangePassword = () => {
                   <h1 className="text-[#000] dark:text-[#FFF] font-[500]"></h1>
                 </div>
                 <div className="w-[100%] gap-x-[10px] flex-col sm:gap-y-[10px] ">
-                  <button className="py-[5px] px-[15px] bg-[#0095F6] text-[#FFF] rounded-[10px] font-[600] text-[13px]">
-                    Сменить пароль
+                  <button  style={loading?{backgroundColor:"white"}:{backgroundColor:"#0095F6"}} onClick={changePassword} className="py-[5px] px-[15px] bg-[#0095F6] text-[#FFF] rounded-[10px] font-[600] text-[13px]">
+                    {loading?<LoadingButton/>:
+                    "Сменить пароль"
+                    }
                   </button>
                   <h1 className="text-[#0095F6] font-[600] text-[13px] pt-[20px]">
                     Забыли пароль?
